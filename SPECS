@@ -1,0 +1,23 @@
+SPECS : 
+
+GET / -> index of the website
+GET / articles -> webpage with a list of articles
+GET / article / {id} -> webpage of the article {id}
+GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )
+    -> list of articles sorted by oldest, newest, controversial... Optional count
+    of articles to return and optional starting position (Paging)
+
+GET / articles / {id} / linked / ( {count} / ( {start} ) ) -> webpage with all linked articles, 
+    optional count of articles and optional starting position for paging
+
+POST / articles -> Creates a new article
+    {
+        name: string
+        text: string
+        author: string
+        formatting: string (plain / MD / HTML? / LaTeX?)        
+    }
+
+PUT / articles / {id} -> Updates the article {id}
+
+DELETE / articles / {id} -> Deletes the article {id}
