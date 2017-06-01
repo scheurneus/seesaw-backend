@@ -38,7 +38,7 @@ class Server:
             '''
             return "articles"
 
-        @self.app.route("/article/<int:article_id>", methods=["GET"])
+        @self.app.route("/articles/<int:article_id>", methods=["GET"])
         def get_article(article_id):
             '''
             Returns the article with article id {article_id}
@@ -100,6 +100,14 @@ class Server:
                        request.form.get("formatting"),
                        request.form.get("text"))
 
+        @self.app.route("/articles/<int:article_id>", methods=["PUT"])
+        def update_article(article_id):
+            return "Updating the content of article {}".format(article_id)
+
+
+        @self.app.route("/articles/<int:article_id>", methods=["DELETE"])
+        def delete_article(article_id):
+            return "Deleting the article {}".format(article_id)
 
         self.app.run(self.ip_adress, self.port)
 

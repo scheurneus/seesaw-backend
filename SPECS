@@ -19,5 +19,7 @@ POST / articles -> Creates a new article
     }
 
 PUT / articles / {id} -> Updates the article {id}
-
+    {
+        content: string
+    }
 DELETE / articles / {id} -> Deletes the article {id}
