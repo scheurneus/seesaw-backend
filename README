@@ -1,0 +1,3 @@
+# Seesaw Backend
+this is the backend for seesaw, an essay-oriented social platforms.
+It is written mostly in python and uses a mariadb (or mysql) database for storage.
