@@ -19,11 +19,11 @@ class db_connector():
         WriterUID, title, subtitle, submitdate, summary, body = self.cursor.fetchone()
         self.cursor.reset()
         author = self.getDisplayName(WriterUID)
-        # Get parents and children, stored in a list of tuples which each contain an int.
+        # Get parents and children, stored in a list of ints.
         self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
         parents = [i[0] for i in self.cursor.fetchall()]
-       self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
+        self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
         children = [i[0] for i in self.cursor.fetchall()]
-        # Get tags, stored in a list of tuples which each contain a str.
+        # Get tags, stored in a list strings.
         self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
-        tags = self.cursor.fetchall()
+        tags = [i[0] for i in self.cursor.fetchall()]
