@@ -30,9 +30,10 @@ class db_connector():
         tags = [i[0] for i in self.cursor.fetchall()]
 
     def push_article(self, writer_uid, title, subtitle, submitdate, summary, body, links_ids=[], tags=[]):
-        query = "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);"
         try:
-            self.cursor.execute(query, (writer_uid, title, subtitle, submitdate, summary, body))
+            self.cursor.execute(
+                "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);",
+                (writer_uid, title, subtitle, submitdate, summary, body))
             article_id = cursor.lastrowid
             for link_id in link_ids:
                 self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
