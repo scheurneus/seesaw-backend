@@ -17,9 +17,9 @@ class db_connector():
     
     def get_article(self, aid):
         self.cursor.execute("SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s", (aid,))
-        author_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchone()
+        writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchone()
         self.cursor.reset()
-        author = self.get_display_name(writer_uid)
+        writer = self.get_display_name(writer_uid)
         # Get parents and children, stored in a list of ints.
         self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
         parents = [i[0] for i in self.cursor.fetchall()]
@@ -30,9 +30,10 @@ class db_connector():
         tags = [i[0] for i in self.cursor.fetchall()]
 
     def push_article(self, writer_uid, title, subtitle, submitdate, summary, body, links_ids=[], tags=[]):
-        query = "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);"
         try:
-            self.cursor.execute(query, (writer_uid, title, subtitle, submitdate, summary, body))
+            self.cursor.execute(
+                "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);",
+                (writer_uid, title, subtitle, submitdate, summary, body))
             article_id = cursor.lastrowid
             for link_id in link_ids:
                 self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
