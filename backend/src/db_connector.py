@@ -28,13 +28,16 @@ class db_connector():
         self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
         tags = [i[0] for i in self.cursor.fetchall()]
 
-    def push_article(self, author_uid, title, subtitle, submitdate, summary, body):
-        pass
+    def push_article(self, writer_uid, title, subtitle, submitdate, summary, body, links_ids=[], tags=[]):
+        self.cursor.execute("INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);", (writer_uid, title, subtitle, submitdate, summary, body))
+        article_id = 1 #THIS DOESN"T WORK YET, PLOX FIX, I DON"T KNOW HOW TO
+
+        for link_id in link_ids:
+            self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
+        for tag in tags:
+            self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%d, %s)", (article_id, tag))
 
     def push_user(self, username, password, email, displayname=""):
-        pass
-
-    def sanitate_string(self, string):
         pass
     
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
