@@ -54,14 +54,18 @@ class Server:
         @self.app.route("/articles/<method>/<int:count>/<int:start>", methods=[
             "GET"
         ])
-        def article_sorted(method, count, start):
+        def article_sorted(list_type, count, start):
             '''
             Returns {count} sorted by {method} articles,
             starting from {start}
             '''
-            if(method != "oldest"
-               and method != "newest"
-               and method != "controversial"):
+            if list_type == "newest":
+                pass
+            elif list_type == "oldest":
+                pass
+            elif list_type == "controversial":
+                pass
+            else:
                 return "Unknown sorting method"
             return '''{} articles
             sorted by {}, starting from {}'''.format(count, method, start)
