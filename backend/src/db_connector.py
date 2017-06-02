@@ -1,5 +1,4 @@
 import mysql.connector as mariadb
-import hashlib
 from passlib import custom_app_context as pwd_context
 
 class db_connector():
