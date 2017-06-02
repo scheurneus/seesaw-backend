@@ -24,6 +24,13 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+bin/
+*.swp
+
+
+backend/include/python3.4m
+backend/pip-selfcheck.json
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
