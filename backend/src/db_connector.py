@@ -1,6 +1,6 @@
 import mysql.connector as mariadb
 
-class dbconnector():
+class db_connector():
     def __init__(self, uname, passw, dbase):
         self.db = mariadb.connect(user=uname,password=passw,database=dbase)
         self.cursor = self.db.cursor()
@@ -21,9 +21,9 @@ class dbconnector():
         author = self.getDisplayName(WriterUID)
         # Get parents and children, stored in a list of tuples which each contain an int.
         self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
-        parents = self.cursor.fetchall()
-        self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
-        children = self.cursor.fetchall()
+        parents = [i[0] for i in self.cursor.fetchall()]
+       self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
+        children = [i[0] for i in self.cursor.fetchall()]
         # Get tags, stored in a list of tuples which each contain a str.
         self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
         tags = self.cursor.fetchall()
