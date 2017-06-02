@@ -7,6 +7,6 @@ class dbconnector():
     def getArticle(self, aid)
         self.cursor.execute("SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s", (aid,))
         article = self.cursor.fetchone()
-	WriterUID, title, subtitle, submitdate, summary, body = article
-	       
+        WriterUID, title, subtitle, submitdate, summary, body = article
+           
         
