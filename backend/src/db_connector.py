@@ -12,8 +12,7 @@ class db_connector():
         self.cursor.reset()
         if displayname:
             return displayname
-        else:
-            return username
+        return username
     
     def get_article(self, aid):
         self.cursor.execute("SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s", (aid,))
