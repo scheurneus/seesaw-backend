@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-
 import time
 
 class Server:
@@ -107,6 +106,9 @@ class Server:
 
         @self.app.route("/articles/<int:article_id>", methods=["DELETE"])
         def delete_article(article_id):
+            '''
+            Deletes the article with article id {article_id}
+            '''
             return "Deleting the article {}".format(article_id)
 
         self.app.run(self.ip_adress, self.port)
