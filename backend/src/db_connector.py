@@ -29,15 +29,27 @@ class db_connector():
         tags = [i[0] for i in self.cursor.fetchall()]
 
     def push_article(self, writer_uid, title, subtitle, submitdate, summary, body, links_ids=[], tags=[]):
-        self.cursor.execute("INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);", (writer_uid, title, subtitle, submitdate, summary, body))
-        article_id = cursor.lastrowid
-        for link_id in link_ids:
-            self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
-        for tag in tags:
-            self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%d, %s)", (article_id, tag))
+        query = "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);"
+        try:
+            self.cursor.execute(query, (writer_uid, title, subtitle, submitdate, summary, body))
+            article_id = cursor.lastrowid
+            for link_id in link_ids:
+                self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
+            for tag in tags:
+                self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%d, %s)", (article_id, tag))
+            return article_id
+        except:
+            return False
 
     def push_user(self, username, password, email, displayname=""):
-        pass
+        password = hash(password)
+        regdate = time.strftime('%Y-%m-%d %H:%M:%S')
+        query = "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)"
+        try:
+            self.cursor.execute(query, (displayname, username, password, email, regdate))
+            return curser.lastrowid
+        except:
+            return False
     
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
         if username:
@@ -48,3 +60,5 @@ class db_connector():
             pass
         if displayname:
             pass
+    def check_password(self, username, password):
+        pass
