@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
+from Renderer import Renderer
 import time
 
 class Server:
@@ -28,21 +29,21 @@ class Server:
             '''
             Index page
             '''
-            return "index"
+            return Renderer.render_index(False)
 
         @self.app.route("/articles", methods=["GET"])
         def articles():
             '''
             Returns a list of articles
             '''
-            return "articles"
+            return Renderer.render_article_list(False, None)
 
         @self.app.route("/articles/<int:article_id>", methods=["GET"])
         def get_article(article_id):
             '''
             Returns the article with article id {article_id}
             '''
-            return "Returning the article {}".format(article_id)
+            return Renderer.render_article(False, None)
 
         @self.app.route("/articles/<method>/", defaults={
             "count": 10, "start": 0
@@ -62,8 +63,7 @@ class Server:
                and method != "newest"
                and method != "controversial"):
                 return "Unknown sorting method"
-            return '''{} articles
-            sorted by {}, starting from {}'''.format(count, method, start)
+            return Renderer.render_sorted_article_list(False, None, None, None, None)
 
         @self.app.route("/articles/<int:article_id>/linked", defaults={
             'count': 10,
@@ -81,8 +81,8 @@ class Server:
             Returns all articles linked to the article with
             article id = {article_id}
             '''
-            return '''{} articles linked to {}
-                , starting from {}'''.format(count, article_id, start)
+
+            return Renderer.render_linked_articles(False, None,None)
 
         @self.app.route("/articles", methods=["POST"])
         def create_article():
