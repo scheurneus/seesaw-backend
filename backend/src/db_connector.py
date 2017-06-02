@@ -1,4 +1,6 @@
 import mysql.connector as mariadb
+import hashlib
+from passlib import custom_app_context as pwd_context
 
 class db_connector():
     def __init__(self, db_username, db_password, db_host):
@@ -42,7 +44,7 @@ class db_connector():
             return False
 
     def push_user(self, username, password, email, displayname=""):
-        password = hash(password)
+        password = pwd_context.hash(password)
         regdate = time.strftime('%Y-%m-%d %H:%M:%S')
         query = "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)"
         try:
@@ -60,5 +62,11 @@ class db_connector():
             pass
         if displayname:
             pass
+
     def check_password(self, username, password):
-        pass
+        query = "SELECT password from Users where username = %s"
+        self.cursor.execute(query, (password))
+        fetched_hash = self.cursor.fetchone()
+        if pwd_context.verify(password, fetched_hash):
+            return True
+        return False
