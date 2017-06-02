@@ -20,4 +20,11 @@ class dbconnector():
         self.cursor.reset()
         WriterUID, title, subtitle, submitdate, summary, body = article
         author = getDisplayName(WriterUID)
-    
+        # Get parents and children, stored in a list of tuples which each contain an int.
+        self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
+        parents = self.cursor.fetchall()
+        self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
+        children = self.cursor.fetchall()
+        # Get tags, stored in a list of tuples which each contain a str.
+        self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
+        tags = self.cursor.fetchall()
