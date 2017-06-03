@@ -34,16 +34,16 @@ class db_connector():
         except:
             return False
 
-    def push_article(self, writer_uid, title, subtitle, submitdate, summary, body, links_ids=[], tags=[]):
+    def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
         try:
             self.cursor.execute(
-                "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%d,%s,%s,%s,%s,%s);",
-                (writer_uid, title, subtitle, submitdate, summary, body))
-            article_id = cursor.lastrowid
+                "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%s,%s,%s,CURRENT_TIMESTAMP,%s,%s);",
+                (writer_uid, title, subtitle, summary, body))
+            article_id = self.cursor.lastrowid
             for link_id in link_ids:
-                self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
+                self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%s, %s)", (article_id, link_id))
             for tag in tags:
-                self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%d, %s)", (article_id, tag))
+                self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%s, %s)", (article_id, tag))
             self.db.commit()
             return article_id
         except:
