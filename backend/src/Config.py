@@ -1,3 +1,5 @@
-mysql = { "username" = "user"
-          "password" = "password"
-          "db_name" = "seesaw"}
+config = {
+    'mysql' : { "username" : "user",
+                "password" : "password",
+                "db_name" : "seesaw"}
+}
