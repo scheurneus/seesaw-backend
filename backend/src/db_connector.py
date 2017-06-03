@@ -2,10 +2,12 @@ import mysql.connector as mariadb
 from passlib import custom_app_context as pwd_context
 
 class db_connector():
-    def __init__(self, db_username, db_password, db_host):
-        self.db = mariadb.connect(user=db_username,password=db_password,database=db_host)
+    def __init__(self):
+        self.db = mariadb.connect(user=config['DB_USER'],
+                                  password=config['DB_PASS'],
+                                  database=config['DB_NAME'])
         self.cursor = self.db.cursor()
-    
+
     def get_displayname(self,uid):
         self.cursor.execute("SELECT displayname, username FROM Users WHERE UID=%s",(uid,))
         displayname, username = self.cursor.fetchone()
@@ -13,7 +15,7 @@ class db_connector():
         if displayname:
             return displayname
         return username
-    
+
     def get_article(self, aid):
         self.cursor.execute("SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s", (aid,))
         writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchone()
@@ -51,7 +53,7 @@ class db_connector():
             return curser.lastrowid
         except:
             return False
-    
+
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
         if username:
             pass
