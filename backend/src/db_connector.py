@@ -1,5 +1,6 @@
+import time
 import mysql.connector as mariadb
-from passlib import custom_app_context as pwd_context
+from passlib.apps import custom_app_context as pwd_context
 
 class db_connector():
     def __init__(self, db_username, db_password, db_host):
@@ -21,7 +22,7 @@ class db_connector():
                 (aid,))
             writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchone()
             self.cursor.reset()
-            writer = self.get_display_name(writer_uid)
+            writer = self.get_displayname(writer_uid)
             # Get parents and children, stored in a list of ints.
             self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
             parents = [i[0] for i in self.cursor.fetchall()]
@@ -43,6 +44,7 @@ class db_connector():
                 self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%d, %d)", (article_id, link_id))
             for tag in tags:
                 self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%d, %s)", (article_id, tag))
+            self.db.commit()
             return article_id
         except:
             return False
@@ -50,10 +52,11 @@ class db_connector():
     def push_user(self, username, password, email, displayname=""):
         password = pwd_context.hash(password)
         regdate = time.strftime('%Y-%m-%d %H:%M:%S')
-=       try:
+        try:
             self.cursor.execute(
                 "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)",
                 (displayname, username, password, email, regdate))
+            self.db.commit()
             return curser.lastrowid
         except:
             return False
@@ -69,9 +72,8 @@ class db_connector():
             pass
 
     def check_password(self, username, password):
-        self.cursor.execute("SELECT password from Users where username = %s", (password))
-        fetched_hash = self.cursor.fetchone()
-        given_hash = pwd_context.hash(password)
-        if pwd_context.verify(given_hash, fetched_hash):
+        self.cursor.execute("SELECT password from Users where username=%s", (username,))
+        fetched_hash = self.cursor.fetchone()[0]
+        if pwd_context.verify(password, fetched_hash):
             return True
         return False
