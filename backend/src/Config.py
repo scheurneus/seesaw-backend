@@ -1,5 +1,6 @@
+global config
 config = {
-    'mysql' : { "username" : "user",
-                "password" : "password",
-                "db_name" : "seesaw"}
+    "DB_USER" : "user",
+    "DB_PASS" : "password",
+    "DB_NAME" : "seesaw",
 }
