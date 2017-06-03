@@ -58,7 +58,7 @@ class db_connector():
                 "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)",
                 (displayname, username, password, email, regdate))
             self.db.commit()
-            return curser.lastrowid
+            return self.cursor.lastrowid
         except:
             return False
     
