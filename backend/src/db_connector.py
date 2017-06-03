@@ -35,10 +35,11 @@ class db_connector():
             return False
 
     def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
+        submitdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         try:
             self.cursor.execute(
-                "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%s,%s,%s,CURRENT_TIMESTAMP,%s,%s);",
-                (writer_uid, title, subtitle, summary, body))
+                "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%s,%s,%s,%s,%s,%s);",
+                (writer_uid, title, subtitle, submitdate, summary, body))
             article_id = self.cursor.lastrowid
             for link_id in link_ids:
                 self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%s, %s)", (article_id, link_id))
@@ -51,7 +52,7 @@ class db_connector():
 
     def push_user(self, username, password, email, displayname=""):
         password = pwd_context.hash(password)
-        regdate = time.strftime('%Y-%m-%d %H:%M:%S')
+        regdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         try:
             self.cursor.execute(
                 "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)",
