@@ -3,7 +3,9 @@ from passlib import custom_app_context as pwd_context
 
 class db_connector():
     def __init__(self):
-        self.db = mariadb.connect(user=DB_USER,password=DB_PASS,database=DB_NAME)
+        self.db = mariadb.connect(user=config['DB_USER'],
+                                  password=config['DB_PASS'],
+                                  database=config['DB_NAME'])
         self.cursor = self.db.cursor()
 
     def get_displayname(self,uid):
