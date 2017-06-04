@@ -45,6 +45,8 @@ class db_connector():
     def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
         # adds a new article to the database, 
         # returns a bool describing whether the action was successfull and a second field containing either the reason for failure or the article's newly generated article id upon success 
+        if not self.check_user_exists(user_id = writer_uid):
+            return False, "user doesn't exist"
         submitdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         try:
             self.cursor.execute(
@@ -61,8 +63,8 @@ class db_connector():
             return False, "query execution failed"
 
     def push_user(self, username, password, email, displayname=""):
-    # adds a new user account to the database, 
-    # returns a bool describing whether the action was successfull and in the second field the newly generated user id upon success or the reason for failure upon failure
+        # adds a new user account to the database, 
+        # returns a bool describing whether the action was successfull and in the second field the newly generated user id upon success or the reason for failure upon failure
         password = pwd_context.hash(password)
         regdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         if self.check_user_exists(username = username):
@@ -77,8 +79,8 @@ class db_connector():
             return False, "query execution failed"
 
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
-    # modifies the properties of a preexisting user acocunt, 
-    # returns False if the user doesn't exist or if modification fails, True if all goes well, returns the reason for failure upon failure and the user_id upon success
+        # modifies the properties of a preexisting user acocunt, 
+        # returns False if the user doesn't exist or if modification fails, True if all goes well, returns the reason for failure upon failure and the user_id upon success
         if self.check_user_exists(username = username):
             return False, "a user with the given username already exists"
 
@@ -104,10 +106,10 @@ class db_connector():
                 return False, "displayname query failed"
 
     def check_user_exists(self, username=False, user_id=False):
-    # checks whether a user exists with the properties in the variables, 
-    # returns bool
+        # checks whether a user exists with the properties in the variables, 
+        # returns bool
 
-    # todo: maybe add email too?
+        # todo: maybe add email too?
         if username and user_id:
             self.cursor.execute(
                 "SELECT user_id from Users where username=%s and UID=%s",
@@ -129,8 +131,8 @@ class db_connector():
         return False
 
     def check_password(self, username, password):
-    # checks whether the supplied password is correct, 
-    # returns bool 
+        # checks whether the supplied password is correct, 
+        # returns bool 
         if not self.check_user_exists(username = username):
             return False
         self.cursor.execute("SELECT password from Users where username=%s", (username,))
