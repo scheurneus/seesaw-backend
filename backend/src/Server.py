@@ -3,6 +3,7 @@ from flask import request
 from flask_cors import CORS
 from Renderer import Renderer
 import time
+from Article import Article
 
 class Server:
     """
@@ -31,19 +32,19 @@ class Server:
             '''
             return Renderer.render_index(False)
 
-        @self.app.route("/articles", methods=["GET"])
+        @self.app.route("/articles/", methods=["GET"])
         def articles():
             '''
             Returns a list of articles
             '''
-            return Renderer.render_article_list(False, None)
+            return Renderer.render_article_list(False, Article.fake_article_list(5))
 
         @self.app.route("/articles/<int:article_id>", methods=["GET"])
         def get_article(article_id):
             '''
             Returns the article with article id {article_id}
             '''
-            return Renderer.render_article(False, None)
+            return Renderer.render_article(False, Article("1", "2", "3", "4", "5", "6"))
 
         @self.app.route("/articles/<method>/", defaults={
             "count": 10, "start": 0
@@ -63,7 +64,8 @@ class Server:
                and method != "newest"
                and method != "controversial"):
                 return "Unknown sorting method"
-            return Renderer.render_sorted_article_list(False, None, None, None, None)
+            return Renderer.render_sorted_article_list(
+                False, Article.fake_article_list(count)[start:], method, count, start)
 
         @self.app.route("/articles/<int:article_id>/linked", defaults={
             'count': 10,
@@ -82,7 +84,8 @@ class Server:
             article id = {article_id}
             '''
 
-            return Renderer.render_linked_articles(False, None,None)
+            return Renderer.render_linked_articles(
+                False, Article.fake_article_list(count)[start:], article_id)
 
         @self.app.route("/articles", methods=["POST"])
         def create_article():

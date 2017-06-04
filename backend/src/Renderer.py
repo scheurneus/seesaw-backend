@@ -12,14 +12,14 @@ class Renderer:
         '''
         if(api_request):
             return "index"
-        return render_template("index_template")
+        return render_template("index_template.html")
 
     def render_article(api_request, article):
         '''
         Renders a single article
         '''
         if not api_request:
-            return render_template("article_template", article)
+            return render_template("article_template.html", article=article)
 
         return dumps({
             'title': article.title,
@@ -34,7 +34,7 @@ class Renderer:
         Renders a list of articles
         '''
         if not api_request:
-            return render_template("featured_article_list_template", article_list)
+            return render_template("featured_article_list_template.html", articles=article_list)
 
         return dumps([{
             'title': article.title,
@@ -51,8 +51,9 @@ class Renderer:
         if api_request:
             return render_article_list(True, article_list)
 
-        return render_template("sorted_article_list_template",
-                               article_list, method, count, start)
+        return render_template("sorted_article_list_template.html",
+                               articles=article_list, method=method,
+                               count=count, start=start)
 
     def render_linked_articles(api_request, article_list, article_id):
         '''
@@ -60,4 +61,6 @@ class Renderer:
         '''
         if api_request:
             return render_article_list(True, article_list)
-        return render_template("linked_articles_template", article_list, article_id)
+        return render_template("linked_articles_template.html",
+                               articles=article_list, article_id=article_id)
+
