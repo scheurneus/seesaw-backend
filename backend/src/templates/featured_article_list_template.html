@@ -1,0 +1,10 @@
+<html>
+	Featured Articles
+	{% for article in articles %}
+	<div>
+		Title : {{ article.title }}
+		Author : {{ article.author }}
+		Content : {{ article.content }}
+	</div>
+	{% endfor %}
+</html>

@@ -1,7 +1,8 @@
 from flask import Flask, request
 from flask_cors import CORS
-
+from Renderer import Renderer
 import time
+from Article import Article
 
 class Server:
     """
@@ -28,65 +29,105 @@ class Server:
             '''
             Index page
             '''
-            return "index"
+            return Renderer.render_index(False)
 
-        @self.app.route("/articles", methods=["GET"])
-        def articles():
+        @self.app.route("/articles/", methods=["GET"], defaults={
+            "api": False
+        })
+        @self.app.route("/api/articles/", methods=["GET"], defaults={
+            "api": True
+        })
+        def articles(api):
             '''
             Returns a list of articles
             '''
-            return "articles"
+            return Renderer.render_article_list(api, Article.fake_article_list(5))
 
-        @self.app.route("/articles/<int:article_id>", methods=["GET"])
-        def get_article(article_id):
+        @self.app.route("/articles/<int:article_id>", methods=["GET"], defaults={
+            "api": False
+        })
+        @self.app.route("/api/articles/<int:article_id>", methods=["GET"], 
+                        defaults={
+                            "api": True
+                        })
+        def get_article(article_id, api):
             '''
             Returns the article with article id {article_id}
             '''
-            return "Returning the article {}".format(article_id)
+            return Renderer.render_article(api, Article(article_id, "2", "3", "4", "5", "6"))
 
         @self.app.route("/articles/<method>/", defaults={
-            "count": 10, "start": 0
+            "count": 10,
+            "start": 0,
+            "api": False
         }, methods=["GET"])
         @self.app.route("/articles/<method>/<int:count>/", defaults={
-            "start": 0
+            "start": 0,
+            "api": False
         }, methods=["GET"])
-        @self.app.route("/articles/<method>/<int:count>/<int:start>", methods=[
-            "GET"
-        ])
-        def article_sorted(list_type, count, start):
+        @self.app.route("/articles/<method>/<int:count>/<int:start>",
+                        defaults={
+                            "api": False
+                        }, methods=["GET"])
+        @self.app.route("/api/articles/<method>/", defaults={
+            "count": 10,
+            "start": 0,
+            "api": True
+        }, methods=["GET"])
+        @self.app.route("/api/articles/<method>/<int:count>/", defaults={
+            "start": 0,
+            "api": True
+        }, methods=["GET"])
+        @self.app.route("/api/articles/<method>/<int:count>/<int:start>",
+                        defaults={
+                            "api": True
+                        }, methods=["GET"])
+        def article_sorted(method, count, start, api):
             '''
             Returns {count} sorted by {method} articles,
             starting from {start}
             '''
-            if list_type == "newest":
-                pass
-            elif list_type == "oldest":
-                pass
-            elif list_type == "controversial":
-                pass
-            else:
-                return "Unknown sorting method"
-            return '''{} articles
-            sorted by {}, starting from {}'''.format(count, method, start)
+            return Renderer.render_sorted_article_list(
+                api, Article.fake_article_list(count)[start:], method, count, start)
 
         @self.app.route("/articles/<int:article_id>/linked", defaults={
             'count': 10,
-            'start': 0
+            'start': 0,
+            'api': False
         }, methods=["GET"])
         @self.app.route("/articles/<int:article_id>/linked/<int:count>/",
                         defaults={
-                            'start': 0
+                            'start': 0,
+                            'api': False
                         }, methods=["GET"])
         @self.app.route(
             "/articles/<int:article_id>/linked/<int:count>/<int:start>",
-            methods=["GET"])
-        def linked_articles(article_id, count, start):
+            defaults={
+                'api': True
+            }, methods=["GET"])
+        @self.app.route("/api/articles/<int:article_id>/linked", defaults={
+            'count': 10,
+            'start': 0,
+            'api': True
+        }, methods=["GET"])
+        @self.app.route("/api/articles/<int:article_id>/linked/<int:count>/",
+                        defaults={
+                            'start': 0,
+                            'api': True
+                        }, methods=["GET"])
+        @self.app.route(
+            "/api/articles/<int:article_id>/linked/<int:count>/<int:start>",
+            defaults={
+                'api': True
+            }, methods=["GET"])
+        def linked_articles(article_id, count, start, api):
             '''
             Returns all articles linked to the article with
             article id = {article_id}
             '''
-            return '''{} articles linked to {}
-                , starting from {}'''.format(count, article_id, start)
+
+            return Renderer.render_linked_articles(
+                api, Article.fake_article_list(count)[start:], article_id)
 
         @self.app.route("/articles", methods=["POST"])
         def create_article():
@@ -110,6 +151,9 @@ class Server:
 
         @self.app.route("/articles/<int:article_id>", methods=["DELETE"])
         def delete_article(article_id):
+            '''
+            Deletes the article with article id {article_id}
+            '''
             return "Deleting the article {}".format(article_id)
 
         self.app.run(self.ip_adress, self.port)
