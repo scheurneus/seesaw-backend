@@ -48,8 +48,12 @@ class Renderer:
         '''
         Renders a sorted list of articles
         '''
+        if method != "oldest" and method != "newest" and method != "controversial":
+            if api_request:
+                return dumps({'error': 'Unknown sorting method'})
+            return "Unknown sorting method"
         if api_request:
-            return render_article_list(True, article_list)
+            return Renderer.render_article_list(True, article_list)
 
         return render_template("sorted_article_list_template.html",
                                articles=article_list, method=method,
@@ -60,7 +64,7 @@ class Renderer:
         Renders a list of linked articles
         '''
         if api_request:
-            return render_article_list(True, article_list)
+            return Renderer.render_article_list(True, article_list)
         return render_template("linked_articles_template.html",
                                articles=article_list, article_id=article_id)
 
