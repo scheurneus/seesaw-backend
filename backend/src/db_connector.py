@@ -10,6 +10,10 @@ class db_connector():
         self.cursor = self.db.cursor()
 
     def get_displayname(self,uid):
+        # gets the name to be displayed for a given user id
+        # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
+        if not self.check_user_exists(user_id = uid):
+            return False
         self.cursor.execute("SELECT displayname, username FROM Users WHERE UID=%s",(uid,))
         displayname, username = self.cursor.fetchone()
         self.cursor.reset()
@@ -18,6 +22,8 @@ class db_connector():
         return username
 
     def get_article(self, aid):
+        # gets an article from the database, 
+        # returns a dictionary with article content and everything
         try:
             self.cursor.execute(
                 "SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s",
@@ -37,6 +43,8 @@ class db_connector():
             return False
 
     def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
+        # adds a new article to the database, 
+        # returns a bool describing whether the action was successfull and a second field containing either the reason for failure or the article's newly generated article id upon success 
         submitdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         try:
             self.cursor.execute(
@@ -48,33 +56,83 @@ class db_connector():
             for tag in tags:
                 self.cursor.execute("INSERT INTO Tags (AID, tag) Values(%s, %s)", (article_id, tag))
             self.db.commit()
-            return article_id
+            return True, article_id
         except:
-            return False
+            return False, "query execution failed"
 
     def push_user(self, username, password, email, displayname=""):
+    # adds a new user account to the database, 
+    # returns a bool describing whether the action was successfull and in the second field the newly generated user id upon success or the reason for failure upon failure
         password = pwd_context.hash(password)
         regdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
+        if self.check_user_exists(username = username):
+            return False, "a user with the given username already exists"
         try:
             self.cursor.execute(
                 "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)",
                 (displayname, username, password, email, regdate))
             self.db.commit()
-            return self.cursor.lastrowid
+            return True, self.cursor.lastrowid
         except:
-            return False
+            return False, "query execution failed"
 
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
+    # modifies the properties of a preexisting user acocunt, 
+    # returns False if the user doesn't exist or if modification fails, True if all goes well, returns the reason for failure upon failure and the user_id upon success
+        if self.check_user_exists(username = username):
+            return False, "a user with the given username already exists"
+
         if username:
-            pass
+            try:
+                pass
+            except:
+                return False, "username query failed"
         if password:
-            pass
+            try:
+                pass
+            except:
+                return False, "password query failed"
         if email:
-            pass
+            try:
+                pass
+            except:
+                return False, "email query failed"
         if displayname:
-            pass
+            try:
+                pass
+            except:
+                return False, "displayname query failed"
+
+    def check_user_exists(self, username=False, user_id=False):
+    # checks whether a user exists with the properties in the variables, 
+    # returns bool
+
+    # todo: maybe add email too?
+        if username and user_id:
+            self.cursor.execute(
+                "SELECT user_id from Users where username=%s and UID=%s",
+                (username, user_id)
+            )
+            return bool(self.cursor.fetchone())
+        elif username:
+            self.cursor.execute(
+                "SELECT user_id from Users where username=%s",
+                (username)
+            )
+            return bool(self.cursor.fetchone())
+        elif user_id:
+            self.cursor.execute(
+                "SELECT user_id from Users where UID=%s",
+                (user_id)
+            )
+            return bool(self.cursor.fetchone())
+        return False
 
     def check_password(self, username, password):
+    # checks whether the supplied password is correct, 
+    # returns bool 
+        if not self.check_user_exists(username = username):
+            return False
         self.cursor.execute("SELECT password from Users where username=%s", (username,))
         fetched_hash = self.cursor.fetchone()[0]
         if pwd_context.verify(password, fetched_hash):
