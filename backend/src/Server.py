@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import request
+from flask import Flask, request
 from flask_cors import CORS
 from Renderer import Renderer
 import time
