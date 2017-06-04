@@ -11,7 +11,9 @@ class db_connector():
 
     def get_displayname(self,uid):
         # gets the name to be displayed for a given user id
-        # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
+        # returns
+        #   a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
+
         if not self.check_user_exists(user_id = uid):
             return False
         self.cursor.execute("SELECT displayname, username FROM Users WHERE UID=%s",(uid,))
@@ -23,7 +25,8 @@ class db_connector():
 
     def get_article(self, aid):
         # gets an article from the database, 
-        # returns a dictionary with article content and everything
+        # returns a dictionary with article content n everything
+
         try:
             self.cursor.execute(
                 "SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s",
@@ -44,7 +47,10 @@ class db_connector():
 
     def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
         # adds a new article to the database, 
-        # returns a bool describing whether the action was successfull and a second field containing either the reason for failure or the article's newly generated article id upon success 
+        # returns 
+        #   a bool describing whether the action was successfull 
+        #   a second field containing either the reason for failure or the article's newly generated article id upon success 
+
         if not self.check_user_exists(user_id = writer_uid):
             return False, "user doesn't exist"
         submitdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
@@ -64,7 +70,10 @@ class db_connector():
 
     def push_user(self, username, password, email, displayname=""):
         # adds a new user account to the database, 
-        # returns a bool describing whether the action was successfull and in the second field the newly generated user id upon success or the reason for failure upon failure
+        # returns 
+        #   a bool describing whether the action was successfull 
+        #   the newly generated user id upon success or the reason for failure upon failure
+
         password = pwd_context.hash(password)
         regdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         if self.check_user_exists(username = username):
@@ -80,7 +89,9 @@ class db_connector():
 
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
         # modifies the properties of a preexisting user acocunt, 
-        # returns False if the user doesn't exist or if modification fails, True if all goes well, returns the reason for failure upon failure and the user_id upon success
+        # returns 
+        #   False if the user doesn't exist or if modification fails, True if all goes well
+        #   the reason for failure upon failure and the user_id upon success
         if self.check_user_exists(username = username):
             return False, "a user with the given username already exists"
 
