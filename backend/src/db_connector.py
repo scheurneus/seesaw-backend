@@ -138,3 +138,6 @@ class db_connector():
         if pwd_context.verify(password, fetched_hash):
             return True
         return False
+
+    def modify_article(self, article_id, title=False, subtitle=False, summary=False, body=False):
+        pass
