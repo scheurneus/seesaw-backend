@@ -1,6 +1,9 @@
 import time
 import mysql.connector as mariadb
 from passlib.apps import custom_app_context as pwd_context
+from Config import config
+from Article import Article
+from json import dumps
 
 class db_connector():
     def __init__(self):
@@ -10,26 +13,26 @@ class db_connector():
         self.cursor = self.db.cursor()
             
     # ARTICLE MANAGEMENT
-    def get_article(self, aid):
+    def get_article(self, article_id):
         # gets an article from the database, 
         # returns a dictionary with article content and everything
-        try:
-            self.cursor.execute(
-                "SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID=%s",
-                (aid,))
-            writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchone()
-            self.cursor.reset()
-            writer = self.get_displayname(writer_uid)
-            # Get parents and children, stored in a list of ints.
-            self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
-            parents = [i[0] for i in self.cursor.fetchall()]
-            self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
-            children = [i[0] for i in self.cursor.fetchall()]
-            # Get tags, stored in a list strings.
-            self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
-            tags = [i[0] for i in self.cursor.fetchall()]
-        except:
-            return False
+        #try:
+        self.cursor.execute(
+            "SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID = %s",
+            (article_id))
+        writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchall()[0]
+        self.cursor.reset()
+        writer = self.get_displayname(writer_uid)
+        return Article(
+            article_id,
+            title,
+            subtitle,
+            writer_uid,
+            submitdate,
+            body
+        )
+        #except Exception as e: 
+            #return False
 
     def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
         # adds a new article to the database, 
@@ -53,8 +56,22 @@ class db_connector():
 
     # ARTICLE LISTS
     def get_article_list(self, method, amount, start, origin=False):
-        if method="parents":
-            pass
+        if method=="parents":
+            try:
+                self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s",(aid,))
+                return [i[0] for i in self.cursor.fetchall()]
+            except:
+                return False
+        elif method=="children":
+            try:
+                self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s",(aid,))
+                return [i[0] for i in self.cursor.fetchall()]
+            except:
+                return False
+
+            # Get tags, stored in a list strings.
+            self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
+            tags = [i[0] for i in self.cursor.fetchall()]
 
     # USER MANAGEMENT
     def get_displayname(self,uid):

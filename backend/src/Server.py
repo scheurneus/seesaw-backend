@@ -3,7 +3,8 @@ from flask_cors import CORS
 from Renderer import Renderer
 import time
 from Article import Article
-
+from db_connector import db_connector
+import Config
 
 class Server:
     """
@@ -33,7 +34,11 @@ class Server:
         @self.app.route("/api/articles/<int:article_id>", methods=["GET"], defaults={"api": True})
         def get_article(article_id, api):
             '''Returns the article with article id {article_id}'''
-            return Renderer.render_article(api, Article(article_id, "2", "3", "4", "5", "6"))
+            #try:
+            article = db.get_article(article_id) 
+            return Renderer.render_article(api, article)
+            #except:
+                #return Renderer.render_error(api, "blarg")
 
         @self.app.route("/articles", methods=["POST"])
         def create_article():
@@ -62,12 +67,11 @@ class Server:
             return "Deleting the article {}".format(article_id)
 
         # ARTICLE LISTS
-        @self.app.route("/articles/",                                   methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False, 'method': 'newest'})
+        @self.app.route("/articles/",                                   methods=["GET"], defaults={'api': False, 'offset': False, 'var_2': False, 'var_1': False, 'method': 'newest'})
         @self.app.route("/articles/<method>/",                          methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False})
         @self.app.route("/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False})
         @self.app.route("/articles/<method>/<var_1>/<var_2>/",          methods=["GET"], defaults={'api': False, 'var_3': False})
         @self.app.route("/articles/<method>/<var_1>/<var_2>/<var_3>/",  methods=["GET"], defaults={'api': False})
-
         @self.app.route("/api/articles/",                                   methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False, 'method': 'newest'})
         @self.app.route("/api/articles/<method>/",                          methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False})
         @self.app.route("/api/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False})
@@ -82,6 +86,7 @@ class Server:
                 return Renderer.render_error("This listing method doesn't seem to exist (yet).")
             article_list = db_connector.article_list(method, origin=origin, amount=amount, start=offset)
             return Renderer.render_article_list(api, article_list, method, origin=origin)
+
 
         # ACOUNT MANAGEMENT
         @self.app.route("/login", methods=["POST"])
@@ -104,4 +109,5 @@ class Server:
 
 if __name__ == "__main__":
     s = Server("127.0.0.1", 8080)
+    db = db_connector()
     s.start()

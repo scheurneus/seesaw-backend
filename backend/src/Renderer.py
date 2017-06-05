@@ -20,9 +20,9 @@ class Renderer:
 
         return dumps({
             'title': article.title,
+            'subtitle': article.subtitle,
             'author': article.author,
             'date': article.date,
-            'formatting': article.formatting,
             'article_id': article.article_id
         })
 
