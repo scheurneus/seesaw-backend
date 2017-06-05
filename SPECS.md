@@ -19,8 +19,9 @@
     {
 		title: string,
         content: string
-    } both are optional, will remain unchanged if left out
+    } 
 ```
+	both are optional, will remain unchanged if left out
 * __DELETE / articles / {id}__ -> Deletes the article {id} (requires a current session)
 
 ## Article lists
@@ -30,7 +31,7 @@
     -> list of articles sorted by oldest, newest, controversial... \\
 	Optional count of articles to return and optional starting position (Paging)
 
-* __GET / articles / {parents} | {children} | {tagged} / {origin} / ( {count} / ( {start} ) )__
+* __GET / articles / {parents_of} | {children_of} | {tagged} / {origin} / ( {count} / ( {start} ) )__
     -> list of articles that are replied to by a given article, reply to a given article or have a given tag. \\
 	{origin} contains either the given article (in the case of parent/children) or the given tag. \\
 	Optional count of articles to return and optional starting position (Paging)
@@ -48,16 +49,21 @@
 ```
 	{
 		username: string
+		password: string
 		display_name: string
 		email: string
-	}
+	} 
 ```
+	username needs to be unique
 * __PUT / modify_user__ -> attempt to change account properties
 ```
 	{
 		username: string
 		display_name: string
 		email: string
-	} all are optional, will remain unchanged if left empty
+		password: string
+	} 
 ```
+	all are optional, will remain unchanged if left empty; 
+	if username is changed, the new username needs to be unique too.
 

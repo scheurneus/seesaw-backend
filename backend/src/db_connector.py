@@ -8,19 +8,8 @@ class db_connector():
                                   password=config['DB_PASS'],
                                   database=config['DB_NAME'])
         self.cursor = self.db.cursor()
-
-    def get_displayname(self,uid):
-        # gets the name to be displayed for a given user id
-        # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
-        if not self.check_user_exists(user_id = uid):
-            return False
-        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID=%s",(uid,))
-        displayname, username = self.cursor.fetchone()
-        self.cursor.reset()
-        if displayname:
-            return displayname
-        return username
-
+            
+    # ARTICLE MANAGEMENT
     def get_article(self, aid):
         # gets an article from the database, 
         # returns a dictionary with article content and everything
@@ -59,6 +48,26 @@ class db_connector():
             return True, article_id
         except:
             return False, "query execution failed"
+    def delete_article(self, article_id):
+        pass
+
+    # ARTICLE LISTS
+    def get_article_list(self, method, amount, start):
+        if method="parents":
+            pass
+
+    # USER MANAGEMENT
+    def get_displayname(self,uid):
+        # gets the name to be displayed for a given user id
+        # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
+        if not self.check_user_exists(user_id = uid):
+            return False
+        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID=%s",(uid,))
+        displayname, username = self.cursor.fetchone()
+        self.cursor.reset()
+        if displayname:
+            return displayname
+        return username
 
     def push_user(self, username, password, email, displayname=""):
     # adds a new user account to the database, 
