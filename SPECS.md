@@ -1,41 +1,41 @@
 # SPECS : 
 
-* GET / -> index of the website
-* GET / article / {id} -> webpage of the article {id}
+* __GET / __-> index of the website
+* __GET / article / {id} __-> webpage of the article {id}
 
 
-* GET / articles -> webpage with a list of articles
+* __GET / articles__-> webpage with a list of articles
 
-* GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )
+* __GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )__
     -> list of articles sorted by oldest, newest, controversial... Optional count
     of articles to return and optional starting position (Paging)
 
-* GET / articles / {parents} | {children} | {tagged} / {origin} / ( {count} / ( {start} ) )
+* __GET / articles / {parents} | {children} | {tagged} / {origin} / ( {count} / ( {start} ) )__
     -> list of articles that are replied to by a given article, reply to a given article or have a given tag
 	{origin} contains either the given article (in the case of parent/children) or the given tag
 	Optional count of articles to return and optional starting position (Paging)
 
 
 
-* POST / login -> attempt to log in to an existing account
+* __POST / login__ -> attempt to log in to an existing account
 	{
 		username: string
 		password: string
 	}
-* POST / register -> attempt to register a new account
+* __POST / register__ -> attempt to register a new account
 	{
 		username: string
 		display_name: string
 		email: string
 	}
-* PUT / modify_user -> attempt to change account properties
+* __PUT / modify_user__ -> attempt to change account properties
 	{
 		username: string
 		display_name: string
 		email: string
 	} all are optional, will remain unchanged if left empty
 
-* POST / articles -> Creates a new article
+* __POST / articles__ -> Creates a new article
     {
         name: string
         text: string
@@ -45,9 +45,9 @@
 		replies_to: array of article ids
     }
 
-* PUT / articles / {id} -> Updates the article {id}
+* __PUT / articles / {id}__ -> Updates the article {id}
     {
 		title: string,
         content: string
     } both are optional, will remain unchanged if left out
-* DELETE / articles / {id} -> Deletes the article {id} (requires a current session)
+* __DELETE / articles / {id} -> Deletes the article {id} (requires a current session)
