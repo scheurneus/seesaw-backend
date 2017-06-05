@@ -4,6 +4,7 @@ from Renderer import Renderer
 import time
 from Article import Article
 
+
 class Server:
     """
     This is the main class that handles
@@ -28,8 +29,8 @@ class Server:
             return Renderer.render_index(False)
 
         # ARTICLE MANAGEMENT
-        @self.app.route("/articles/<int:article_id>",    methods=["GET"], defaults={"api": False})
-        @self.app.route("/api/articles/<int:article_id>",methods=["GET"], defaults={"api": True})
+        @self.app.route("/articles/<int:article_id>",     methods=["GET"], defaults={"api": False})
+        @self.app.route("/api/articles/<int:article_id>", methods=["GET"], defaults={"api": True})
         def get_article(article_id, api):
             '''Returns the article with article id {article_id}'''
             return Renderer.render_article(api, Article(article_id, "2", "3", "4", "5", "6"))
@@ -60,37 +61,37 @@ class Server:
             '''
             return "Deleting the article {}".format(article_id)
 
-        # ARTICLE LISTS    
-        @self.app.route("/articles/",                                   methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False, 'method':'newest'}
+        # ARTICLE LISTS
+        @self.app.route("/articles/",                                   methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False, 'method': 'newest'}
         @self.app.route("/articles/<method>/",                          methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False}
         @self.app.route("/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False}
         @self.app.route("/articles/<method>/<var_1>/<var_2>/",          methods=["GET"], defaults={'api': False, 'var_3': False}
         @self.app.route("/articles/<method>/<var_1>/<var_2>/<var_3>/",  methods=["GET"], defaults={'api': False}
-        @self.app.route("/api/articles/",                                   methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False, 'method':'newest'}
+        @self.app.route("/api/articles/",                                   methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False, 'method': 'newest'}
         @self.app.route("/api/articles/<method>/",                          methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False}
         @self.app.route("/api/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False}
         @self.app.route("/api/articles/<method>/<var_1>/<var_2>/",          methods=["GET"], defaults={'api': True, 'var_3': False}
         @self.app.route("/api/articles/<method>/<var_1>/<var_2>/<var_3>/",  methods=["GET"], defaults={'api': True}
         def article_list():
             if method in ["newest", "oldest", "controversial"]:
-                origin, amount, offset = False, var_1, var_2
+                origin, amount, offset=False, var_1, var_2
             elif method in ["parents_of", "children_of", "tagged"]:
-                origin, amount, offset = var_1, var_2, var_3
+                origin, amount, offset=var_1, var_2, var_3
             else:
                 return Renderer.render_error("This listing method doesn't seem to exist (yet).")
-            article_list=db_connector.article_list(method, origin = origin, amount=amount, start=offset)
+            article_list=db_connector.article_list(method, origin=origin, amount=amount, start=offset)
             return Renderer.render_article_list(api, article_list, method, origin=origin)
-                
+
         # ACOUNT MANAGEMENT
-        @self.app.route("/login", methods=["POST"]) 
+        @self.app.route("/login", methods=["POST"])
         def login():
             pass
 
-        @self.app.route("/register", methods=["POST"]) 
+        @self.app.route("/register", methods=["POST"])
         def login():
             pass
 
-        @self.app.route("/modify_user", methods=["PUSH"]) 
+        @self.app.route("/modify_user", methods=["PUSH"])
         def modify_user():
             pass
 
@@ -101,5 +102,5 @@ class Server:
         self.app.run(self.ip_adress, self.port)
 
 if __name__ == "__main__":
-    s = Server("127.0.0.1", 8080)
+    s=Server("127.0.0.1", 8080)
     s.start()
