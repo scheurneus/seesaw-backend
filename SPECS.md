@@ -27,13 +27,13 @@
 ## Article lists
 
 * __GET / articles__ -> webpage with a list of articles
-* __GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )__
-    -> list of articles sorted by oldest, newest, controversial... Optional count
-    of articles to return and optional starting position (Paging)
+* __GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )__\\
+    -> list of articles sorted by oldest, newest, controversial... \\
+	Optional count of articles to return and optional starting position (Paging)
 
 * __GET / articles / {parents} | {children} | {tagged} / {origin} / ( {count} / ( {start} ) )__
-    -> list of articles that are replied to by a given article, reply to a given article or have a given tag
-	{origin} contains either the given article (in the case of parent/children) or the given tag
+    -> list of articles that are replied to by a given article, reply to a given article or have a given tag. \\
+	{origin} contains either the given article (in the case of parent/children) or the given tag. \\
 	Optional count of articles to return and optional starting position (Paging)
 
 ## Acount management
