@@ -1,10 +1,10 @@
 # SPECS : 
 
-* __GET / __-> index of the website
-* __GET / article / {id} __-> webpage of the article {id}
+* __GET /__ -> index of the website
+* __GET / article / {id}__ -> webpage of the article {id}
 
 
-* __GET / articles__-> webpage with a list of articles
+* __GET / articles__ -> webpage with a list of articles
 
 * __GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )__
     -> list of articles sorted by oldest, newest, controversial... Optional count
