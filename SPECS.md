@@ -10,8 +10,7 @@
         name: string
         text: string
         author: string
-        formatting: string (plain / MD / HTML? / LaTeX?)        
-		tag: array of strings
+		tags: array of strings
 		replies_to: array of article ids
     }
 ```
