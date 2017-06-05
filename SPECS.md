@@ -1,11 +1,29 @@
 # SPECS : 
 
 * __GET /__ -> index of the website
-* __GET / article / {id}__ -> webpage of the article {id}
 
+## Article management
+* __GET / article / {id}__ -> webpage of the article {id}
+* __POST / article__ -> Creates a new article
+    **{
+        **name: string
+        **text: string
+        **author: string
+        **formatting: string (plain / MD / HTML? / LaTeX?)        
+		**tag: array of strings
+		**replies_to: array of article ids
+    **}
+
+* __PUT / article / {id}__ -> Updates the article {id}
+    {
+		title: string,
+        content: string
+    } both are optional, will remain unchanged if left out
+* __DELETE / articles / {id}__ -> Deletes the article {id} (requires a current session)
+
+## Article lists
 
 * __GET / articles__ -> webpage with a list of articles
-
 * __GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )__
     -> list of articles sorted by oldest, newest, controversial... Optional count
     of articles to return and optional starting position (Paging)
@@ -15,7 +33,7 @@
 	{origin} contains either the given article (in the case of parent/children) or the given tag
 	Optional count of articles to return and optional starting position (Paging)
 
-
+## Acount management
 
 * __POST / login__ -> attempt to log in to an existing account
 	{
@@ -35,19 +53,3 @@
 		email: string
 	} all are optional, will remain unchanged if left empty
 
-* __POST / articles__ -> Creates a new article
-    {
-        name: string
-        text: string
-        author: string
-        formatting: string (plain / MD / HTML? / LaTeX?)        
-		tag: array of strings
-		replies_to: array of article ids
-    }
-
-* __PUT / articles / {id}__ -> Updates the article {id}
-    {
-		title: string,
-        content: string
-    } both are optional, will remain unchanged if left out
-* __DELETE / articles / {id} -> Deletes the article {id} (requires a current session)
