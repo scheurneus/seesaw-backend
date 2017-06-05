@@ -61,12 +61,12 @@ class Server:
             return "Deleting the article {}".format(article_id)
 
         # ARTICLE LISTS    
-        @self.app.route("/articles/",                                   methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False, 'method'='newest'}
+        @self.app.route("/articles/",                                   methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False, 'method':'newest'}
         @self.app.route("/articles/<method>/",                          methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False}
         @self.app.route("/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False}
         @self.app.route("/articles/<method>/<var_1>/<var_2>/",          methods=["GET"], defaults={'api': False, 'var_3': False}
         @self.app.route("/articles/<method>/<var_1>/<var_2>/<var_3>/",  methods=["GET"], defaults={'api': False}
-        @self.app.route("/api/articles/",                                   methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False, 'method'='newest'}
+        @self.app.route("/api/articles/",                                   methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False, 'method':'newest'}
         @self.app.route("/api/articles/<method>/",                          methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False}
         @self.app.route("/api/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False}
         @self.app.route("/api/articles/<method>/<var_1>/<var_2>/",          methods=["GET"], defaults={'api': True, 'var_3': False}
