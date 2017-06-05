@@ -3,8 +3,8 @@
 * __GET /__ -> index of the website
 
 ## Article management
-* __GET / article / {id}__ -> webpage of the article {id}
-* __POST / article__ -> Creates a new article
+* __GET / articles / {id}__ -> webpage of the article {id}
+* __POST / articles__ -> Creates a new article
 ```
     {
         name: string
@@ -14,7 +14,7 @@
 		replies_to: array of article ids
     }
 ```
-* __PUT / article / {id}__ -> Updates the article {id}
+* __PUT / articles / {id}__ -> Updates the article {id}
 ```
     {
 		title: string,

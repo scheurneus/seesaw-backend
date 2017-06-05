@@ -28,13 +28,13 @@ class Server:
             return Renderer.render_index(False)
 
         # ARTICLE MANAGEMENT
-        @self.app.route("/article/<int:article_id>",    methods=["GET"], defaults={"api": False})
-        @self.app.route("/api/article/<int:article_id>",methods=["GET"], defaults={"api": True})
+        @self.app.route("/articles/<int:article_id>",    methods=["GET"], defaults={"api": False})
+        @self.app.route("/api/articles/<int:article_id>",methods=["GET"], defaults={"api": True})
         def get_article(article_id, api):
             '''Returns the article with article id {article_id}'''
             return Renderer.render_article(api, Article(article_id, "2", "3", "4", "5", "6"))
 
-        @self.app.route("/article", methods=["POST"])
+        @self.app.route("/articles", methods=["POST"])
         def create_article():
             '''
             Creates an article using POST parameters
@@ -49,11 +49,11 @@ class Server:
                        request.form.get("formatting"),
                        request.form.get("text"))
 
-        @self.app.route("/article/<int:article_id>", methods=["PUT"])
+        @self.app.route("/articles/<int:article_id>", methods=["PUT"])
         def update_article(article_id):
             return "Updating the content of article {}".format(article_id)
 
-        @self.app.route("/article/<int:article_id>", methods=["DELETE"])
+        @self.app.route("/articles/<int:article_id>", methods=["DELETE"])
         def delete_article(article_id):
             '''
             Deletes the article with article id {article_id}
@@ -73,13 +73,13 @@ class Server:
         @self.app.route("/api/articles/<method>/<var_1>/<var_2>/<var_3>/",  methods=["GET"], defaults={'api': True}
         def articles():
             if method in ["newest", "oldest", "controversial"]:
-                article_list=db_connector.article_list(method, amount=var_1, offset=var_2)
-                return Renderer.render_list(api, article_list, method)
+                origin, amount, offset = False, var_1, var_2
             elif method in ["parents_of", "children_of", "tagged"]:
-                article_list=db_connector.article_list(method, origin=var_1, amount=var_2, offset=var_3)
-                return Renderer.render_list(api, article_list, method, origin=origin)
+                origin, amount, offset = var_1, var_2, var_3
             else:
                 return Renderer.render_error("This listing method doesn't seem to exist (yet).")
+            article_list=db_connector.article_list(method, origin = origin, amount=amount, start=offset)
+            return Renderer.render_list(api, article_list, method, origin=origin)
                 
         # ACOUNT MANAGEMENT
         @self.app.route("/login", methods=["POST"]) 

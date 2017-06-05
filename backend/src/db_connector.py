@@ -52,7 +52,7 @@ class db_connector():
         pass
 
     # ARTICLE LISTS
-    def get_article_list(self, method, amount, start):
+    def get_article_list(self, method, amount, start, origin=False):
         if method="parents":
             pass
 
