@@ -26,7 +26,7 @@ class Renderer:
             'article_id': article.article_id
         })
 
-    def render_list(api_request, articles, method, origin=False):
+    def render_article_list(api_request, articles, method, origin=False):
         '''Renders/outputs an already sorted list of articles'''
         if not api_request:
             pass

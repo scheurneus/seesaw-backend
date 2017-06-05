@@ -71,7 +71,7 @@ class Server:
         @self.app.route("/api/articles/<method>/<var_1>/",                  methods=["GET"], defaults={'api': True, 'var_3': False, 'var_2': False}
         @self.app.route("/api/articles/<method>/<var_1>/<var_2>/",          methods=["GET"], defaults={'api': True, 'var_3': False}
         @self.app.route("/api/articles/<method>/<var_1>/<var_2>/<var_3>/",  methods=["GET"], defaults={'api': True}
-        def articles():
+        def article_list():
             if method in ["newest", "oldest", "controversial"]:
                 origin, amount, offset = False, var_1, var_2
             elif method in ["parents_of", "children_of", "tagged"]:
@@ -79,7 +79,7 @@ class Server:
             else:
                 return Renderer.render_error("This listing method doesn't seem to exist (yet).")
             article_list=db_connector.article_list(method, origin = origin, amount=amount, start=offset)
-            return Renderer.render_list(api, article_list, method, origin=origin)
+            return Renderer.render_article_list(api, article_list, method, origin=origin)
                 
         # ACOUNT MANAGEMENT
         @self.app.route("/login", methods=["POST"]) 
