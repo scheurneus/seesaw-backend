@@ -16,7 +16,7 @@ class Renderer:
         Renders a single article
         '''
         if not api_request:
-            return render_template("article_template.html", article=article)
+            return render_template("article.html", article=article)
 
         return dumps({
             'title': article.title,
