@@ -7,7 +7,9 @@ GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} )
     -> list of articles sorted by oldest, newest, controversial... Optional count
     of articles to return and optional starting position (Paging)
 
-GET / articles / {id} / linked / ( {count} / ( {start} ) ) -> webpage with all linked articles, 
+GET / articles / {id} / parents / ( {count} / ( {start} ) ) -> webpage with all articles that a given article replies to, 
+    optional count of articles and optional starting position for paging
+GET / articles / {id} / children / ( {count} / ( {start} ) ) -> webpage with all articles that reply to a given article,
     optional count of articles and optional starting position for paging
 
 POST / articles -> Creates a new article
@@ -20,6 +22,7 @@ POST / articles -> Creates a new article
 
 PUT / articles / {id} -> Updates the article {id}
     {
+		title: string,
         content: string
-    }
+    }(both are optional, will remain unchanged if left out)
 DELETE / articles / {id} -> Deletes the article {id}

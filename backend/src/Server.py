@@ -26,9 +26,8 @@ class Server:
 
         @self.app.route("/", methods=["GET"])
         def index():
-            '''
-            Index page
-            '''
+            '''Index page'''
+
             return Renderer.render_index(False)
 
         @self.app.route("/articles/", methods=["GET"], defaults={
@@ -38,9 +37,7 @@ class Server:
             "api": True
         })
         def articles(api):
-            '''
-            Returns a list of articles
-            '''
+            '''Returns a list of articles'''
             return Renderer.render_article_list(api, Article.fake_article_list(5))
 
         @self.app.route("/articles/<int:article_id>", methods=["GET"], defaults={
@@ -51,9 +48,8 @@ class Server:
                             "api": True
                         })
         def get_article(article_id, api):
-            '''
-            Returns the article with article id {article_id}
-            '''
+            '''Returns the article with article id {article_id}'''
+
             return Renderer.render_article(api, Article(article_id, "2", "3", "4", "5", "6"))
 
         @self.app.route("/articles/<method>/", defaults={
@@ -83,10 +79,9 @@ class Server:
                             "api": True
                         }, methods=["GET"])
         def article_sorted(method, count, start, api):
-            '''
-            Returns {count} sorted by {method} articles,
-            starting from {start}
-            '''
+            '''Returns {count} sorted by {method} articles,
+            starting from {start}'''
+
             return Renderer.render_sorted_article_list(
                 api, Article.fake_article_list(count)[start:], method, count, start)
 
@@ -120,16 +115,16 @@ class Server:
             defaults={
                 'api': True
             }, methods=["GET"])
-        def linked_articles(article_id, count, start, api):
-            '''
-            Returns all articles linked to the article with
-            article id = {article_id}
-            '''
 
-            return Renderer.render_linked_articles(
-                api, Article.fake_article_list(count)[start:], article_id)
+        def linked_articles(article_id, count, start, api):
+            '''Returns all articles linked to the article with
+            article id = {article_id}'''
+
+            return Renderer.render_list(
+                api, Article.fake_article_list(count)[start:], method="parents_of")
 
         @self.app.route("/articles", methods=["POST"])
+
         def create_article():
             '''
             Creates an article using POST parameters
