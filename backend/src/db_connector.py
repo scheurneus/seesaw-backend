@@ -20,7 +20,7 @@ class db_connector():
         #try:
         self.cursor.execute(
             "SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID = %s",
-            (article_id))
+            (article_id,))
         writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchall()[0]
         self.cursor.reset()
         writer = self.get_displayname(writer_uid)
@@ -69,10 +69,20 @@ class db_connector():
                 return [i[0] for i in self.cursor.fetchall()]
             except:
                 return False
-
-            # Get tags, stored in a list strings.
-            self.cursor.execute("SELECT tag FROM Tags WHERE AID=%s",(aid,))
-            tags = [i[0] for i in self.cursor.fetchall()]
+        elif method=="tagged":
+            try:
+                self.cursor.execute("SELECT AID FROM Tags WHERE tag=%s",(origin,))
+                return [self.get_article(i[0]) for i in self.cursor.fetchall()]
+            except:
+                return False
+        elif method=="newest":
+            pass
+        elif method=="oldest":
+            pass
+        elif method=="controversial":
+            pass
+        else:
+            raise ValueError("This method doesn't exist")
 
     # USER MANAGEMENT
     def get_displayname(self,uid):
@@ -80,7 +90,7 @@ class db_connector():
         # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
         if not self.check_user_exists(user_id = uid):
             return False
-        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID = %s",(uid))
+        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID = %s",(uid,))
         displayname, username = self.cursor.fetchone()
         self.cursor.reset()
         if displayname:
@@ -93,7 +103,7 @@ class db_connector():
         password = pwd_context.hash(password)
         regdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         if self.check_user_exists(username = username):
-            return False, "a user with the given username already exists"
+            raise ValueError("a user with the given username already exists")
         try:
             self.cursor.execute(
                 "INSERT INTO Users (displayname, username, password, email, regdate) Values(%s, %s, %s, %s, %s)",
@@ -105,30 +115,31 @@ class db_connector():
 
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
     # modifies the properties of a preexisting user acocunt, 
-    # returns False if the user doesn't exist or if modification fails, True if all goes well, returns the reason for failure upon failure and the user_id upon success
+    # returns True if all goes well
+    # server.py needs to check whether the user already has a session before executing this function
         if self.check_user_exists(username = username):
-            return False, "a user with the given username already exists"
-
+            raise ValueError("a user with the given username already exists")
+        #still need to update this so it doesn't fail when people try to input their own username
         if username:
             try:
-                pass
+                self.cursor.execute("UPDATE Users SET username=%s WHERE UID=%s", (username, user_id))
             except:
-                return False, "username query failed"
+                raise IOError("username query failed")
         if password:
             try:
-                pass
+                self.cursor.execute("UPDATE Users SET password=%s WHERE UID=%s", (pwd_context.hash(password), user_id))
             except:
-                return False, "password query failed"
+                raise IOError("password query failed")
         if email:
             try:
-                pass
+                self.cursor.execute("UPDATE Users SET email=%s WHERE UID=%s", (email, user_id))
             except:
-                return False, "email query failed"
+                raise IOError("email query failed")
         if displayname:
             try:
-                pass
+                self.cursor.execute("UPDATE Users SET displayname=%s WHERE UID=%s", (displayname, user_id))
             except:
-                return False, "displayname query failed"
+                raise IOError("displayname query failed")
 
     def check_user_exists(self, username=False, user_id=False):
     # checks whether a user exists with the properties in the variables, 
@@ -137,21 +148,18 @@ class db_connector():
     # todo: maybe add email too?
         if username and user_id:
             self.cursor.execute(
-                "SELECT user_id from Users where username=%s and UID=%s",
-                (username, user_id)
-            )
+                "SELECT UID from Users where username=%s and UID=%s",
+                (username, user_id,))
             return bool(self.cursor.fetchone())
         elif username:
             self.cursor.execute(
-                "SELECT user_id from Users where username=%s",
-                (username)
-            )
+                "SELECT UID from Users where username=%s",
+                (username,))
             return bool(self.cursor.fetchone())
         elif user_id:
             self.cursor.execute(
-                "SELECT user_id from Users where UID=%s",
-                (user_id)
-            )
+                "SELECT UID from Users where UID=%s",
+                (user_id,))
             return bool(self.cursor.fetchone())
         return False
 
@@ -159,7 +167,7 @@ class db_connector():
     # checks whether the supplied password is correct, 
     # returns bool 
         if not self.check_user_exists(username = username):
-            return False
+            raise ValueError("no user with the given username exists")
         self.cursor.execute("SELECT password from Users where username=%s", (username,))
         fetched_hash = self.cursor.fetchone()[0]
         if pwd_context.verify(password, fetched_hash):
