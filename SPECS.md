@@ -38,6 +38,7 @@ In order to sort article lists, optional GET params are appended:
     * newest
     * oldest
     * controversial
+
 _default is newest_
 * amount -> int, defines the amount of articles listed, _default is 10_
 * offset -> int, defines the how-manyeth article is the first article to be returned, _default is 0_
@@ -59,7 +60,7 @@ _default is newest_
 		email: string
 	} 
 ```
-	username needs to be unique
+username needs to be unique
 * __PUT / modify_user__ -> attempt to change account properties
 ```
 	{
@@ -69,6 +70,6 @@ _default is newest_
 		password: string
 	} 
 ```
-	all are optional, will remain unchanged if left empty; 
-	if username is changed, the new username needs to be unique too.
+all are optional, will remain unchanged if left empty; 
+if username is changed, the new username needs to be unique too.
 
