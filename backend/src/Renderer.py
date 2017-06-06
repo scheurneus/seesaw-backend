@@ -1,6 +1,7 @@
 from flask import render_template
 from json import dumps
 
+
 class Renderer:
     '''Class that, given response data, decides what to return to the client'''
 
@@ -30,18 +31,18 @@ class Renderer:
         '''Renders/outputs an already sorted list of articles'''
         if not api_request:
             pass
-            if method=="oldest":
+            if method == "oldest":
                 list_title = "Oldest Articles"
-            elif method=="newest":
+            elif method == "newest":
                 list_title = "Newest Articles"
-            elif method=="controversial":
+            elif method == "controversial":
                 list_title = "Articles with most activity"
-            elif method=="tagged":
-                list_title = "Articles with the tag %s" %origin
-            elif method=="parents_of":
-                list_title = "Articles that %s replies to" %origin
-            elif method=="children_of":
-                list_title = "Articles that reply to %s" %origin
+            elif method == "tagged":
+                list_title = "Articles with the tag %s" % origin
+            elif method == "parents_of":
+                list_title = "Articles that %s replies to" % origin
+            elif method == "children_of":
+                list_title = "Articles that reply to %s" % origin
 
             render_template("list.html", articles=articles, list_title=list_title)
 
@@ -52,7 +53,7 @@ class Renderer:
             'formatting': article.formatting,
             'article_id': article.article_id
         } for article in articles])
-            
+
     def render_error(api_request, reason):
         if api_request:
             return dumps(reason)
