@@ -7,9 +7,9 @@
 * __POST / articles__ -> Creates a new article
 ```
     {
-        name: string
-        text: string
-        author: string
+		name: string
+		text: string
+		author: string
 		tags: array of strings
 		replies_to: array of article ids
     }
@@ -18,7 +18,7 @@
 ```
     {
 		title: string,
-        content: string
+		content: string
     } 
 ```
 	both are optional, will remain unchanged if left out
@@ -35,9 +35,9 @@
 
 In order to sort article lists, optional GET params are appended:
 * sort_by -> any of:
-** newest
-** oldest
-** controversial
+ * newest
+ * oldest
+ * controversial
 * amount -> int, defines the amount of articles listed
 * offset -> int, defines the how-manyeth article is the first article to be returned
 ## Acount management
