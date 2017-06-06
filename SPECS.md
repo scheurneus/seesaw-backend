@@ -34,7 +34,7 @@
     -> list of articles that are replied to by a given article (with article id {origin}), reply to a given article or have a given tag. \\
 
 In order to sort article lists, optional GET params are appended:
-* sort_by -> any of:
+* sort -> any of:
     * newest
     * oldest
     * controversial
