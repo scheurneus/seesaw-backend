@@ -22,14 +22,14 @@ class db_connector():
         self.cursor.execute(
             "SELECT WriterUID, title, subtitle, submitdate, summary, body FROM Articles WHERE AID = %s",
             (article_id,))
-        writer_uid, title, subtitle, submitdate, summary, body = self.cursor.fetchall()[0]
+        writer_user_id, title, subtitle, submitdate, summary, body = self.cursor.fetchall()[0]
         self.cursor.reset()
-        writer = self.get_displayname(writer_uid)
+        writer = self.get_displayname(writer_user_id)
         return Article(
             article_id,
             title,
             subtitle,
-            writer_uid,
+            writer_user_id,
             writer,
             submitdate,
             body
@@ -37,14 +37,14 @@ class db_connector():
         # except Exception as e:
         #   return False
 
-    def push_article(self, writer_uid, title, subtitle, summary, body, link_ids=[], tags=[]):
+    def push_article(self, writer_user_id, title, subtitle, summary, body, link_ids=[], tags=[]):
         # adds a new article to the database,
         # returns a bool describing whether the action was successfull and a second field containing either the reason for failure or the article's newly generated article id upon success
         submitdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         try:
             self.cursor.execute(
                 "INSERT INTO Articles (WriterUID, title, subtitle, submitdate, summary, body) VALUES(%s,%s,%s,%s,%s,%s);",
-                (writer_uid, title, subtitle, submitdate, summary, body))
+                (writer_user_id, title, subtitle, submitdate, summary, body))
             article_id = self.cursor.lastrowid
             for link_id in link_ids:
                 self.cursor.execute("INSERT INTO Links (ChildAID, ParentAid) Values(%s, %s)", (article_id, link_id))
@@ -59,41 +59,30 @@ class db_connector():
         pass
 
     # ARTICLE LISTS
-    def get_article_list(self, method, amount, start, origin=False):
-        if method == "parents":
-            try:
-                self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s", (origin,))
-                return [i[0] for i in self.cursor.fetchall()]
-            except:
-                return False
-        elif method == "children":
-            try:
-                self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s", (origin,))
-                return [i[0] for i in self.cursor.fetchall()]
-            except:
-                return False
+    def get_article_list(self, sort, amount, offset, method=False, tag=False, article_id=False):
+        # add amount, offset
+        # try:
+        if method == "children":
+            self.cursor.execute("SELECT ChildAID FROM Links WHERE ParentAID=%s;", (article_id,))
+        elif method == "parents":
+            self.cursor.execute("SELECT ParentAID FROM Links WHERE ChildAID=%s;", (article_id,))
         elif method == "tagged":
-            try:
-                self.cursor.execute("SELECT AID FROM Tags WHERE tag=%s", (origin,))
-                return [self.get_article(i[0]) for i in self.cursor.fetchall()]
-            except:
-                return False
-        elif method == "newest":
-            pass
-        elif method == "oldest":
-            pass
-        elif method == "controversial":
-            pass
+            self.cursor.execute("SELECT AID FROM Tags WHERE tag=%s;", (tag,))
+        elif method is False:
+            self.cursor.execute("SELECT AID FROM Articles;")
         else:
             raise ValueError("This method doesn't exist")
+        # except:
+        #    raise IOError("Article list query failed")
+        return [self.get_article(i[0]) for i in self.cursor.fetchall()]
 
     # USER MANAGEMENT
-    def get_displayname(self, uid):
+    def get_displayname(self, user_id):
         # gets the name to be displayed for a given user id
         # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false.
-        if not self.check_user_exists(user_id=uid):
+        if not self.check_user_exists(user_id=user_id):
             return False
-        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID = %s", (uid,))
+        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID = %s", (user_id,))
         displayname, username = self.cursor.fetchone()
         self.cursor.reset()
         if displayname:
@@ -114,7 +103,7 @@ class db_connector():
             self.db.commit()
             return True, self.cursor.lastrowid
         except:
-            return False, "query execution failed"
+            raise IOError("User pushing query failed")
 
     def modify_user(self, user_id, username=False, password=False, email=False, displayname=False):
         # modifies the properties of a preexisting user acocunt,

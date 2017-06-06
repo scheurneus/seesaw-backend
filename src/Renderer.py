@@ -27,31 +27,28 @@ class Renderer:
             'article_id': article.article_id
         })
 
-    def render_article_list(api_request, articles, method, origin=False):
+    def render_article_list(api_request, articles, sort, amount, offset, method=False, tag=False, origin=False):
         '''Renders/outputs an already sorted list of articles'''
         if not api_request:
             pass
-            if method == "oldest":
-                list_title = "Oldest Articles"
-            elif method == "newest":
-                list_title = "Newest Articles"
-            elif method == "controversial":
-                list_title = "Articles with most activity"
-            elif method == "tagged":
-                list_title = "Articles with the tag %s" % origin
+            if method == "tagged":
+                list_title = "Articles with the tag %s" % tag
             elif method == "parents_of":
                 list_title = "Articles that %s replies to" % origin
             elif method == "children_of":
                 list_title = "Articles that reply to %s" % origin
+            else:
+                list_title = "All Articles"
 
-            render_template("list.html", articles=articles, list_title=list_title)
+            return render_template("list.html", articles=articles, list_title=list_title)
 
         return dumps([{
+            'article_id': article.article_id,
             'title': article.title,
+            'subtitle': article.subtitle,
+            'author_id': article.author_id,
             'author': article.author,
-            'date': article.date,
-            'formatting': article.formatting,
-            'article_id': article.article_id
+            'date': str(article.date)
         } for article in articles])
 
     def render_error(api_request, reason):
