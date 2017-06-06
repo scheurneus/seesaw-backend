@@ -19,6 +19,7 @@ class Server:
         self.app = Flask("Server")
         self.app.debug = True
         CORS(self.app)
+        self.db = db_connector()
 
     def start(self):
         """Starts the server"""
@@ -35,7 +36,7 @@ class Server:
         def get_article(article_id, api):
             '''Returns the article with article id {article_id}'''
             #try:
-            article = db.get_article(article_id) 
+            article = self.db.get_article(article_id) 
             return Renderer.render_article(api, article)
             #except:
                 #return Renderer.render_error(api, "blarg")
@@ -103,7 +104,7 @@ class Server:
                 origin, amount, offset = var_1, var_2, var_3
             else:
                 return Renderer.render_error("This listing method doesn't seem to exist (yet).")
-            article_list = db_connector.article_list(method, origin=origin, amount=amount, start=offset)
+            article_list = self.db.article_list(method, origin=origin, amount=amount, start=offset)
             return Renderer.render_article_list(api, article_list, method, origin=origin)
 
 
@@ -128,5 +129,4 @@ class Server:
 
 if __name__ == "__main__":
     s = Server("127.0.0.1", 8080)
-    db = db_connector()
     s.start()
