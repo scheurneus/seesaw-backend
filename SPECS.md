@@ -38,8 +38,9 @@ In order to sort article lists, optional GET params are appended:
     * newest
     * oldest
     * controversial
-* amount -> int, defines the amount of articles listed
-* offset -> int, defines the how-manyeth article is the first article to be returned
+_default is newest_
+* amount -> int, defines the amount of articles listed, _default is 10_
+* offset -> int, defines the how-manyeth article is the first article to be returned, _default is 0_
 ## Acount management
 
 * __POST / login__ -> attempt to log in to an existing account
