@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+{% block title %}{{ list_title }} {% endblock %}
+{% block in_page_title %}{{ list_title }} {% endblock %}
+{% block content %}
+	<b> Number of articles: {{articles|length}}</b>
+	<ul>
+		{% for article in articles %}
+			<li>
+				<a href="/article/{{ article.article_id}}">
+					<h3>{{ article.title }}</h3>
+					<b>{{ article.author }} </b>
+					<p>{{ article.summary }} </b>
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

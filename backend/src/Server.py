@@ -2,7 +2,8 @@ from flask import Flask, request
 from flask_cors import CORS
 from Renderer import Renderer
 import time
-from Article import Article
+from db_connector import db_connector
+
 
 class Server:
     """
@@ -10,124 +11,34 @@ class Server:
     routing and most of the server functionalities
     """
     def __init__(self, ip, port):
-        """
-        Inits the server.
-        """
+        """Inits the server."""
+
         self.ip_adress = ip
         self.port = port
         self.app = Flask("Server")
         self.app.debug = True
         CORS(self.app)
+        self.db = db_connector()
 
     def start(self):
-        """
-        Starts the server
-        """
+        """Starts the server"""
 
+        # INDEX
         @self.app.route("/", methods=["GET"])
         def index():
-            '''
-            Index page
-            '''
+            '''Index page'''
             return Renderer.render_index(False)
 
-        @self.app.route("/articles/", methods=["GET"], defaults={
-            "api": False
-        })
-        @self.app.route("/api/articles/", methods=["GET"], defaults={
-            "api": True
-        })
-        def articles(api):
-            '''
-            Returns a list of articles
-            '''
-            return Renderer.render_article_list(api, Article.fake_article_list(5))
-
-        @self.app.route("/articles/<int:article_id>", methods=["GET"], defaults={
-            "api": False
-        })
-        @self.app.route("/api/articles/<int:article_id>", methods=["GET"], 
-                        defaults={
-                            "api": True
-                        })
+        # ARTICLE MANAGEMENT
+        @self.app.route("/articles/<int:article_id>",     methods=["GET"], defaults={"api": False})
+        @self.app.route("/api/articles/<int:article_id>", methods=["GET"], defaults={"api": True})
         def get_article(article_id, api):
-            '''
-            Returns the article with article id {article_id}
-            '''
-            return Renderer.render_article(api, Article(article_id, "2", "3", "4", "5", "6"))
-
-        @self.app.route("/articles/<method>/", defaults={
-            "count": 10,
-            "start": 0,
-            "api": False
-        }, methods=["GET"])
-        @self.app.route("/articles/<method>/<int:count>/", defaults={
-            "start": 0,
-            "api": False
-        }, methods=["GET"])
-        @self.app.route("/articles/<method>/<int:count>/<int:start>",
-                        defaults={
-                            "api": False
-                        }, methods=["GET"])
-        @self.app.route("/api/articles/<method>/", defaults={
-            "count": 10,
-            "start": 0,
-            "api": True
-        }, methods=["GET"])
-        @self.app.route("/api/articles/<method>/<int:count>/", defaults={
-            "start": 0,
-            "api": True
-        }, methods=["GET"])
-        @self.app.route("/api/articles/<method>/<int:count>/<int:start>",
-                        defaults={
-                            "api": True
-                        }, methods=["GET"])
-        def article_sorted(method, count, start, api):
-            '''
-            Returns {count} sorted by {method} articles,
-            starting from {start}
-            '''
-            return Renderer.render_sorted_article_list(
-                api, Article.fake_article_list(count)[start:], method, count, start)
-
-        @self.app.route("/articles/<int:article_id>/linked", defaults={
-            'count': 10,
-            'start': 0,
-            'api': False
-        }, methods=["GET"])
-        @self.app.route("/articles/<int:article_id>/linked/<int:count>/",
-                        defaults={
-                            'start': 0,
-                            'api': False
-                        }, methods=["GET"])
-        @self.app.route(
-            "/articles/<int:article_id>/linked/<int:count>/<int:start>",
-            defaults={
-                'api': True
-            }, methods=["GET"])
-        @self.app.route("/api/articles/<int:article_id>/linked", defaults={
-            'count': 10,
-            'start': 0,
-            'api': True
-        }, methods=["GET"])
-        @self.app.route("/api/articles/<int:article_id>/linked/<int:count>/",
-                        defaults={
-                            'start': 0,
-                            'api': True
-                        }, methods=["GET"])
-        @self.app.route(
-            "/api/articles/<int:article_id>/linked/<int:count>/<int:start>",
-            defaults={
-                'api': True
-            }, methods=["GET"])
-        def linked_articles(article_id, count, start, api):
-            '''
-            Returns all articles linked to the article with
-            article id = {article_id}
-            '''
-
-            return Renderer.render_linked_articles(
-                api, Article.fake_article_list(count)[start:], article_id)
+            '''Returns the article with article id {article_id}'''
+            # try:
+            article = self.db.get_article(article_id)
+            return Renderer.render_article(api, article)
+            # except:
+            #   return Renderer.render_error(api, "blarg")
 
         @self.app.route("/articles", methods=["POST"])
         def create_article():
@@ -148,13 +59,69 @@ class Server:
         def update_article(article_id):
             return "Updating the content of article {}".format(article_id)
 
-
         @self.app.route("/articles/<int:article_id>", methods=["DELETE"])
         def delete_article(article_id):
             '''
             Deletes the article with article id {article_id}
             '''
             return "Deleting the article {}".format(article_id)
+
+        # ARTICLE LISTS
+        @self.app.route("/articles/",
+                        methods=["GET"],
+                        defaults={'api': False, 'offset': False, 'var_2': False, 'var_1': False, 'method': 'newest'})
+        @self.app.route("/articles/<method>/",
+                        methods=["GET"], defaults={'api': False, 'var_3': False, 'var_2': False, 'var_1': False})
+        @self.app.route("/articles/<method>/<var_1>/",
+                        methods=["GET"],
+                        defaults={'api': False, 'var_3': False, 'var_2': False})
+        @self.app.route("/articles/<method>/<var_1>/<var_2>/",
+                        methods=["GET"],
+                        defaults={'api': False, 'var_3': False})
+        @self.app.route("/articles/<method>/<var_1>/<var_2>/<var_3>/",
+                        methods=["GET"],
+                        defaults={'api': False})
+        @self.app.route("/api/articles/",
+                        methods=["GET"],
+                        defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False, 'method': 'newest'})
+        @self.app.route("/api/articles/<method>/",
+                        methods=["GET"],
+                        defaults={'api': True, 'var_3': False, 'var_2': False, 'var_1': False})
+        @self.app.route("/api/articles/<method>/<var_1>/",
+                        methods=["GET"],
+                        defaults={'api': True, 'var_3': False, 'var_2': False})
+        @self.app.route("/api/articles/<method>/<var_1>/<var_2>/",
+                        methods=["GET"],
+                        defaults={'api': True, 'var_3': False})
+        @self.app.route("/api/articles/<method>/<var_1>/<var_2>/<var_3>/",
+                        methods=["GET"],
+                        defaults={'api': True})
+        def article_list(method, var_1, var_2, var_3, api):
+            if method in ["newest", "oldest", "controversial"]:
+                origin, amount, offset = False, var_1, var_2
+            elif method in ["parents_of", "children_of", "tagged"]:
+                origin, amount, offset = var_1, var_2, var_3
+            else:
+                return Renderer.render_error("This listing method doesn't seem to exist (yet).")
+            article_list = self.db.article_list(method, origin=origin, amount=amount, start=offset)
+            return Renderer.render_article_list(api, article_list, method, origin=origin)
+
+        # ACOUNT MANAGEMENT
+        @self.app.route("/login", methods=["POST"])
+        def login():
+            pass
+
+        @self.app.route("/register", methods=["POST"])
+        def register():
+            pass
+
+        @self.app.route("/modify_user", methods=["PUSH"])
+        def modify_user():
+            pass
+
+        @self.app.errorhandler(404)
+        def page_not_found(e):
+            return Renderer.render_error(False, "404: page not found.")
 
         self.app.run(self.ip_adress, self.port)
 
