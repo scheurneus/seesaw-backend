@@ -2,34 +2,34 @@
 <html lang="en">
 
 <head>
-	<% block head %>
+	{% block head %}
 		<meta charset="utf-8">
-		<title><% block title %>home<% endblock %> - seesaw</title>
-		<% block stylesheets %>
-			<link href="{{ url_for('static', filename='style.ss') }}" type="text/css" rel="stylesheet">
+		<title>{% block title %}home{% endblock %} - seesaw</title>
+		{% block stylesheets %}
+			<link href="{{ url_for('static', filename='style.css') }}" type="text/css" rel="stylesheet">
 			<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-		<% endblock %>
-	<% block head %>
+		{% endblock %}
+	{% endblock %}
 </head>
 
 <body>
-	<h1 class="title"><% block in_page_title %>seesaw<% endblock %></h1>
+	<h1 class="title">{% block in_page_title %}seesaw{% endblock %}</h1>
 	<ul class="nav">
-		<% block menu_items %>
+		{% block menu_items %}
 			<li><a href="#">About</a></li>
 			<li><a href="#">Home</a></li>
 			<li><a href="#">Contact</a></li>
-		<% endblock %>
+		{% endblock %}
 	</ul>
 
 	<div class="stockimage">
 	</div>
 
 	<div class="container">
-		<% block content %>
-		<% endblock %>
+		{% block content %}
+		{% endblock %}
 	</div>
 
 	<script>

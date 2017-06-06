@@ -10,8 +10,9 @@ class db_connector():
         self.db = mariadb.connect(user=config['DB_USER'],
                                   password=config['DB_PASS'],
                                   database=config['DB_NAME'])
+                                  
         self.cursor = self.db.cursor()
-            
+        self.db.paramstyle='format'
     # ARTICLE MANAGEMENT
     def get_article(self, article_id):
         # gets an article from the database, 
@@ -79,7 +80,7 @@ class db_connector():
         # returns a string with displayname or username if the user has no displayname. If the user doesn't exist, it returns false. 
         if not self.check_user_exists(user_id = uid):
             return False
-        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID=%s",(uid,))
+        self.cursor.execute("SELECT displayname, username FROM Users WHERE UID = %s",(uid))
         displayname, username = self.cursor.fetchone()
         self.cursor.reset()
         if displayname:

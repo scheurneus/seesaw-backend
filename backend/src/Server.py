@@ -103,7 +103,7 @@ class Server:
 
         @self.app.errorhandler(404)
         def page_not_found(e):
-            return Renderer.render_error("404: page not found.")
+            return Renderer.render_error(False,"404: page not found.")
 
         self.app.run(self.ip_adress, self.port)
 
