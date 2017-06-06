@@ -27,15 +27,19 @@
 ## Article lists
 
 * __GET / articles__ -> webpage with a list of articles
-* __GET / articles / {oldest} | {newest} | {controversial} / ( {count} / ( {start} ) )__\\
-    -> list of articles sorted by oldest, newest, controversial... \\
-	Optional count of articles to return and optional starting position (Paging)
+    -> list of all articles 
 
-* __GET / articles / {parents_of} | {children_of} | {tagged} / {origin} / ( {count} / ( {start} ) )__
-    -> list of articles that are replied to by a given article, reply to a given article or have a given tag. \\
-	{origin} contains either the given article (in the case of parent/children) or the given tag. \\
-	Optional count of articles to return and optional starting position (Paging)
+* __GET / articles / {tagged} / {tag} /__
+* __GET / articles / {parents} | {children} / {origin} /__
+    -> list of articles that are replied to by a given article (with article id {origin}), reply to a given article or have a given tag. \\
 
+In order to sort article lists, optional GET params are appended:
+* sort_by -> any of:
+** newest
+** oldest
+** controversial
+* amount -> int, defines the amount of articles listed
+* offset -> int, defines the how-manyeth article is the first article to be returned
 ## Acount management
 
 * __POST / login__ -> attempt to log in to an existing account
