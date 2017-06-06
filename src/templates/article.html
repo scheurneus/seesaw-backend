@@ -1,0 +1,9 @@
+{% extends 'main.html' %}
+{% block title %} {{ article.title }} {%endblock%}
+{% block in_page_title %} {{ article.title }} {%endblock%}
+{% block content %}
+<div class="article">
+	<b>by {{ article.author }}</b>
+	{{ article.content }}
+</div>
+{% endblock %}
