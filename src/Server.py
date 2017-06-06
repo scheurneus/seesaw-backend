@@ -22,9 +22,10 @@ class Server:
 
     def get_sorting_params(self, get_vars):
         return "newest", 10, 0
-        # sort = "newest" if request.args["sort"] not in ["newest", "oldest", "controversial"] else request.args["sort"]
-        # amount = 10 if not type(request.args["amount"]) == int else request.args["amount"]
-        # offset = 0 if not type(request.args["offset"]) == int else request.args["offset"]
+#        sort = "newest" if get_vars["sort"] not in ["newest", "oldest", "controversial"] else get_vars["sort"]
+#        amount = 10 if not type(get_vars["amount"]) == int else get_vars["amount"]
+#        offset = 0 if not type(get_vars["offset"]) == int else get_vars["offset"]
+#        return sort, amount, offset
 
     def start(self):
         """Starts the server"""
