@@ -1,0 +1,8 @@
+{% extends 'main.html' %}
+{% block title %} {{page.title}} {%endblock%}
+{% block in_page_title %} {{page.in_page_title}} {%endblock%}
+{% block meta_summary %} {{page.summary}}  {%endblock%}
+{% block content %}		
+	{{page.content|markdown}}	
+{% endblock %}
+
