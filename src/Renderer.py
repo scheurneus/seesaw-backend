@@ -29,7 +29,7 @@ class Renderer:
             'content': article.content
         })
 
-    def render_article_list(api_request, articles, sort, amount, offset, method=False, tag=False, origin=False):
+    def render_article_list(api_request, articles, sort, amount, offset, method=False, tag=False, article_id=False):
         '''Renders/outputs an already sorted list of articles'''
         if not api_request:
             pass
