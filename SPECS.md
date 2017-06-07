@@ -42,6 +42,10 @@ In order to sort article lists, optional GET params are appended:
 _default is newest_
 * amount -> int, defines the amount of articles listed, _default is 10_
 * offset -> int, defines the how-manyeth article is the first article to be returned, _default is 0_
+
+## Tag Lists
+* __GET / tags /__ -> list of tags and the amount of articles with that tag
+
 ## Acount management
 
 * __POST / login__ -> attempt to log in to an existing account

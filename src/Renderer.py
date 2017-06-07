@@ -20,11 +20,13 @@ class Renderer:
             return render_template("article.html", article=article)
 
         return dumps({
+            'article_id': article.article_id,
             'title': article.title,
             'subtitle': article.subtitle,
+            'author_id': article.author_id,
             'author': article.author,
-            'date': article.date,
-            'article_id': article.article_id
+            'date': str(article.date),
+            'content': article.content
         })
 
     def render_article_list(api_request, articles, sort, amount, offset, method=False, tag=False, origin=False):
@@ -51,6 +53,15 @@ class Renderer:
             'date': str(article.date)
         } for article in articles])
 
+    def render_page(api_request, page):
+        if not api_request:
+            return render_template("static_page.html", page=page)
+        return dumps({
+            'title':            page.title,
+            'in_page_title':    page.in_page_title,
+            'summary':          page.summary,
+            'content':          page.content
+        })
     def render_error(api_request, reason):
         if api_request:
             return dumps(reason)

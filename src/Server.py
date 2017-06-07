@@ -1,8 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS
+from flaskext.markdown import Markdown
 from Renderer import Renderer
 import time
 from db_connector import db_connector
+from Page import Page
 
 
 class Server:
@@ -17,6 +19,7 @@ class Server:
         self.port = port
         self.app = Flask("Server")
         self.app.debug = True
+        Markdown(self.app)
         CORS(self.app)
         self.db = db_connector()
 
@@ -115,6 +118,26 @@ class Server:
         @self.app.route("/modify_user", methods=["PUSH"])
         def modify_user():
             pass
+
+
+        @self.app.route("/about/",      defaults={'api': False})
+        @self.app.route("/api/about/",  defaults={'api': True})
+        def about_page(api):
+            return Renderer.render_page(
+                api, 
+                Page("About",
+                     "About Seesaw",
+                     "Seesaw: the new and upcoming site for social commentary in article format.",
+                     """### About Seesaw
+Seesaw is a new and revolutionary addition to the blogosphere.
+We're a site that allows people to post articles, discussing whatever subject they find interesting (within reasonable and legal limits, that is).
+####Replies
+People can respond and comment on another's article, but using the article format is enforced: 
+they have to spend some time and thought on what they want to say and there's a minimal length for articles: so a simple "fuck you" won't suffice.
+
+Apart from this reply-feature which allows chains or trees of related articles to form, there's also the tagging feature.
+By tagging your articles with the subjects it talks about, you can ensure that people who are interested in that tag will see your article
+and by browsing tags, you can look for other's opinions on things that interest you."""))
 
         @self.app.errorhandler(404)
         def page_not_found(e):

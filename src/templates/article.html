@@ -1,9 +1,12 @@
 {% extends 'main.html' %}
 {% block title %} {{ article.title }} {%endblock%}
-{% block in_page_title %} {{ article.title }} {%endblock%}
+{% block in_page_title %} Seesaw - {{ article.title }} {%endblock%}
+{% block meta_summary %} An article on social commentary site seesaw: {{ article.summary|e }} {%endblock%}
 {% block content %}
 <div class="article">
-	<b>by {{ article.author }}</b>
-	{{ article.content }}
+	<h1> {{ article.title }} </h1>
+	<h3> {{ article.subtitle }} </h3>
+	<b>by {{ article.author }}</b></br>
+	<p class="article_content">{{ article.content|markdown }}</p>
 </div>
 {% endblock %}
