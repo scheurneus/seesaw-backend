@@ -39,14 +39,14 @@ class db_connector():
         #     raise IOError("Article query failed")
 
     def get_page(self, page_id):
-        try:
-            self.cursor.execute(
-                "SELECT title, in_page_title, summary, content FROM pages WHERE page_id = %s)",
-                (page_id,))
-            title, in_page_title, summary, content = self.cursor.fetchall()[0]
-            return Page(title, in_page_title, summary, content)
-        except:
-            raise IOError("Static Page query failed")
+        # try:
+        self.cursor.execute(
+            "SELECT title, in_page_title, summary, content FROM pages WHERE page_id = %s;",
+            (page_id,))
+        title, in_page_title, summary, content = self.cursor.fetchall()[0]
+        return Page(title, in_page_title, summary, content)
+        # except:
+        #     raise IOError("Static Page query failed")
 
     def push_article(self, writer_user_id, title, subtitle, summary, content, link_ids=[], tags=[]):
         # adds a new article to the database,

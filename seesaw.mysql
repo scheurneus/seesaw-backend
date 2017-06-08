@@ -71,6 +71,7 @@ CREATE TABLE `pages` (
 
 LOCK TABLES `pages` WRITE;
 /*!40000 ALTER TABLE `pages` DISABLE KEYS */;
+INSERT INTO `pages` VALUES(1, "about", "About", "About Seesaw", "Seesaw: the new and upcoming site for social commentary in article format.", "### About Seesaw\nSeesaw is a new and revolutionary addition to the blogosphere.\nWe're a site that allows people to post articles, discussing whatever subject they find interesting (within reasonable and legal limits, that is).\n####Replies\nPeople can respond and comment on another's article, but using the article format is enforced: \nthey have to spend some time and thought on what they want to say and there's a minimal length for articles: so a simple 'fuck you' won't suffice.\nApart from this reply-feature which allows chains or trees of related articles to form, there's also the tagging feature.\nBy tagging your articles with the subjects it talks about, you can ensure that people who are interested in that tag will see your article\nand by browsing tags, you can look for other's opinions on things that interest you.\n");
 /*!40000 ALTER TABLE `pages` ENABLE KEYS */;
 UNLOCK TABLES;
 

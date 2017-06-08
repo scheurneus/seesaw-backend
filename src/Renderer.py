@@ -36,9 +36,9 @@ class Renderer:
             if method == "tagged":
                 list_title = "Articles with the tag %s" % tag
             elif method == "parents_of":
-                list_title = "Articles that %s replies to" % origin
+                list_title = "Articles that %s replies to" % article_id
             elif method == "children_of":
-                list_title = "Articles that reply to %s" % origin
+                list_title = "Articles that reply to %s" % article_id
             else:
                 list_title = "All Articles"
 
@@ -62,6 +62,7 @@ class Renderer:
             'summary':          page.summary,
             'content':          page.content
         })
+
     def render_error(api_request, reason):
         if api_request:
             return dumps(reason)
