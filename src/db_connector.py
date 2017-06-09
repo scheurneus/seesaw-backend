@@ -120,7 +120,10 @@ class db_connector():
         # modifies the properties of a preexisting user acocunt,
         # returns True if all goes well
         # server.py needs to check whether the user already has a session before executing this function
+
         if self.check_user_exists(username=username) and not self.check_user_exists(username=username, user_id=user_id):
+            # check whether the username the user wants to change to is already in use by a different user, 
+            # if so, raise an exception
             raise ValueError("a user with the given username already exist and it's not you")
 
         if username:
