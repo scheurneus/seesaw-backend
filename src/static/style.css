@@ -101,5 +101,20 @@ h5 {
     }
 }
 .three_items{
-	text-align:justify
+	text-align:justify;
+	align-items: flex-start
 }
+
+.content{	
+	padding-left: 20%;
+	padding-right: 20%;
+	padding-top: 20px;
+}
+
+.article_content {
+	padding-top: 20px;	
+}
+
+
+
+

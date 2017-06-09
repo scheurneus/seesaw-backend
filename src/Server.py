@@ -1,8 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS
+from flaskext.markdown import Markdown
 from Renderer import Renderer
 import time
 from db_connector import db_connector
+from Page import Page
 
 
 class Server:
@@ -17,6 +19,7 @@ class Server:
         self.port = port
         self.app = Flask("Server")
         self.app.debug = True
+        Markdown(self.app)
         CORS(self.app)
         self.db = db_connector()
 
@@ -73,7 +76,6 @@ class Server:
             '''
             return "Deleting the article {}".format(article_id)
 
-
         # ARTICLE LISTS
         @self.app.route("/articles/",           methods=["GET"], defaults={'api': False})
         @self.app.route("/api/articles/",           methods=["GET"], defaults={'api': True})
@@ -104,17 +106,35 @@ class Server:
             return Renderer.render_article_list(api, articles, sort, amount, offset, method="parents", article_id=article_id)
 
         # ACOUNT MANAGEMENT
-        @self.app.route("/login", methods=["POST"])
+        @self.app.route("/login/", methods=["POST"])
         def login():
             pass
 
-        @self.app.route("/register", methods=["POST"])
+        @self.app.route("/login/",      defaults={'api': False})
+        @self.app.route("/api/login/",  defaults={'api': True})
+        def login_page(api):
+            # return Renderer.render_page(api, Page("Login", "Login", "Login to your Seesaw account", "<>"))
+            return Renderer.render_page(api, self.db.get_page("login"))
+
+        @self.app.route("/register/", methods=["POST"])
         def register():
             pass
 
-        @self.app.route("/modify_user", methods=["PUSH"])
+        @self.app.route("/modify_user/", methods=["PUSH"])
         def modify_user():
             pass
+	
+	# STATIC PAGES
+        @self.app.route("/about/",      defaults={'api': False})
+        @self.app.route("/api/about/",  defaults={'api': True})
+        def about_page(api):
+            return Renderer.render_page(api, self.db.get_page("about"))
+
+        @self.app.route("/contact/",      defaults={'api': False})
+        @self.app.route("/api/contact/",  defaults={'api': True})
+        def contact_page(api):
+            return Renderer.render_page(api, self.db.get_page("contact"))
+
 
         @self.app.errorhandler(404)
         def page_not_found(e):

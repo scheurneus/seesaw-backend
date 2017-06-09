@@ -1,0 +1,3 @@
+CREATE DATABASE seesaw;
+CREATE USER 'seesaw'@'localhost' identified by 'seesaw';
+GRANT ALL PRIVILEGES ON seesaw.* to 'seesaw'@'localhost';

@@ -1,0 +1,6 @@
+use seesaw;
+drop table if exists `Articles`;
+drop table if exists `Tags`;
+drop table if exists `Links`;
+drop table if exists `Files`;
+drop table if exists `Users`;

@@ -11,6 +11,7 @@
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 		{% endblock %}
+		<meta name="description" content="{%block meta_description%}{%endblock%}">
 	{% endblock %}
 </head>
 
@@ -21,6 +22,7 @@
 			<li><a href="/about">About</a></li>
 			<li><a href="/">Home</a></li>
 			<li><a href="/contact">Contact</a></li>
+			<li><a href="/articles">Articles</a></li>
 		{% endblock %}
 	</ul>
 
@@ -28,8 +30,18 @@
 	</div>
 
 	<div class="container">
-		{% block content %}
-		{% endblock %}
+		<div class="pre_content">
+			{% block pre_content %}
+			{% endblock %}
+		</div>
+		<div class="content">
+			{% block content %}
+			{% endblock %}
+		</div>
+		<div class="footer">
+			{% block footer %}
+			{% endblock %}
+		</div>
 	</div>
 
 	<script>

@@ -4,7 +4,9 @@ sys.path.insert(0, '/src')
 import mysql.connector as mariadb
 import config
 
-#install.py create database and initialised files etc
+# install.py create database and initialised files etc
+
+
 def setup_database():
     db = mariadb.connect(user=config.mysql['username'],
                          password=config.mysql['password'])
@@ -13,7 +15,7 @@ def setup_database():
     try:
         cursor.execute(
             "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(config.mysql['db_name']))
-    except mysql.connector.Error as err:
+    except mariadb.connector.Error as err:
         print("Failed creating database: {}".format(err))
         exit(1)
 
@@ -85,8 +87,9 @@ def setup_database():
         ) ENGINE=InnoDB;
     """)
 
+
 def main():
     setup_database()
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     main()
