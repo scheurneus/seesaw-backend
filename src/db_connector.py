@@ -109,8 +109,8 @@ class db_connector():
         # modifies the properties of a preexisting user acocunt,
         # returns True if all goes well
         # server.py needs to check whether the user already has a session before executing this function
-        if self.check_user_exists(username=username):
-            raise ValueError("a user with the given username already exists")
+        if not self.check_user_exists(username=username):
+            raise ValueError("a user with the given username doesnt exist")
         # still need to update this so it doesn't fail when people try to input their own username
         if username:
             try:
@@ -132,6 +132,10 @@ class db_connector():
                 self.cursor.execute("UPDATE Users SET displayname=%s WHERE UID=%s", (displayname, user_id))
             except:
                 raise IOError("displayname query failed")
+        try:
+            self.db.commit()
+        except:
+            raise IOError("Committing changes to database failed")
 
     def check_user_exists(self, username=False, user_id=False):
         # checks whether a user exists with the properties in the variables
