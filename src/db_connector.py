@@ -54,7 +54,7 @@ class db_connector():
         submitdate = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime())
         try:
             self.cursor.execute(
-                "INSERT INTO Articles (writer_user_id, title, subtitle, submitdate, summary, content) VALUES(%s,%s,%s,%s,%s,%s);",
+                "INSERT INTO articles (writer_user_id, title, subtitle, submitdate, summary, content) VALUES(%s,%s,%s,%s,%s,%s);",
                 (writer_user_id, title, subtitle, submitdate, summary, content))
             article_id = self.cursor.lastrowid
             for link_id in link_ids:
@@ -80,7 +80,7 @@ class db_connector():
         elif method == "tagged":
             self.cursor.execute("SELECT article_id FROM tags WHERE tag=%s;", (tag,))
         elif method is False:
-            self.cursor.execute("SELECT article_id FROM Articles;")
+            self.cursor.execute("SELECT article_id FROM articles;")
         else:
             raise ValueError("This method doesn't exist")
         # except:
